@@ -3,11 +3,17 @@
     <!-- // * Title -->
     <div class="mb-4 display-2 font-weight-thin">Wheel Repair</div>
     <!-- // * Table: Start -->
-    <v-data-table :headers="$store.state.shop_headersalt" :items="sublet" class="elevation-1">
+    <v-data-table
+      :headers="$store.state.shop_headersalt"
+      :items="sublet"
+      class="elevation-1"
+    >
       <template v-slot:item.comments="{ item }">{{ item.comments }}</template>
       <!-- Buttons -->
       <template v-slot:item.action="{ item }">
-        <v-icon color="success" class="mr-2" @click="completeRepair(item)">mdi-check</v-icon>
+        <v-icon color="success" class="mr-2" @click="completeRepair(item)"
+          >mdi-check</v-icon
+        >
       </template>
     </v-data-table>
     <!-- // * Table: End -->
@@ -58,6 +64,7 @@ export default {
         .where("sublet_inspection", "==", "Complete")
         .where("sublet", "==", "In process")
         .where("repairs", "array-contains", "Wheel Repair")
+        .orderBy("sold", "desc")
         .orderBy("initial_timestamp")
     };
   }

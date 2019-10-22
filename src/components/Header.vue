@@ -15,9 +15,7 @@
       <template>
         <v-dialog v-model="dialog" max-width="600px">
           <!-- // * Add button -->
-          <template
-            v-slot:activator="{ on }"
-          >
+          <template v-slot:activator="{ on }">
             <v-btn v-on="on" icon>
               <v-icon large color="blue">mdi-plus-circle</v-icon>
             </v-btn>
@@ -37,12 +35,21 @@
 
                   <!-- // * Year -->
                   <v-col cols="12" sm="4">
-                    <v-select v-model="year" :items="$store.state.years" label="Year*" required></v-select>
+                    <v-select
+                      v-model="year"
+                      :items="$store.state.years"
+                      label="Year*"
+                      required
+                    ></v-select>
                   </v-col>
 
                   <!-- // * Make -->
                   <v-col cols="12" sm="6" md="4">
-                    <v-select v-model="make" :items="$store.state.makes" label="Make*"></v-select>
+                    <v-select
+                      v-model="make"
+                      :items="$store.state.makes"
+                      label="Make*"
+                    ></v-select>
                   </v-col>
 
                   <!-- // * Model -->
@@ -58,7 +65,20 @@
 
                   <!-- // * Color -->
                   <v-col cols="12" sm="12">
-                    <v-select v-model="color" :items="$store.state.colors" label="Color*"></v-select>
+                    <v-select
+                      v-model="color"
+                      :items="$store.state.colors"
+                      label="Color*"
+                    ></v-select>
+                  </v-col>
+
+                  <!-- // * Sold -->
+                  <v-col>
+                    <div class="body-1">Is this a sold unit?</div>
+                    <v-radio-group v-model="sold">
+                      <v-radio label="Yes" :value="true"></v-radio>
+                      <v-radio label="No" :value="false"></v-radio>
+                    </v-radio-group>
                   </v-col>
                 </v-row>
               </v-container>
@@ -67,7 +87,9 @@
             <v-card-actions>
               <!-- // * Modal buttons: Form submit -->
               <div class="flex-grow-1"></div>
-              <v-btn color="blue darken-1" text @click="dialog = false">Cancel</v-btn>
+              <v-btn color="blue darken-1" text @click="dialog = false"
+                >Cancel</v-btn
+              >
               <v-btn @click="addCar" color="blue darken-1" text>Submit</v-btn>
             </v-card-actions>
           </v-card>
@@ -101,13 +123,14 @@ export default {
       // * Snackbar
       alert: false,
       text: "Make sure you fill out all required fields.",
-      timeout: 3000,
+      timeout: 2000,
       // * Form Variables
       vin: null,
       year: null,
       make: null,
       model: null,
       color: null,
+      sold: null,
       //   * Dialog
       dialog: false,
       // * Database pullins
@@ -123,7 +146,8 @@ export default {
         this.year !== null &&
         this.make !== null &&
         this.model !== null &&
-        this.color !== null
+        this.color !== null &&
+        this.sold !== null
       ) {
         db.collection("tpo").add({
           // * Form Values
@@ -140,7 +164,8 @@ export default {
           sublet: "In process",
           detail: "In process",
           // * Extras
-          repairs: []
+          repairs: [],
+          sold: this.sold
         });
         // Resetting the values to null
         this.vin = null;

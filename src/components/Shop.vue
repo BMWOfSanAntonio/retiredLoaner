@@ -3,7 +3,11 @@
     <!-- // * Title -->
     <div class="mb-4 display-2 font-weight-thin">Shop</div>
     <!-- // * Table: Start -->
-    <v-data-table :headers="$store.state.shop_headers" :items="shop" class="elevation-1">
+    <v-data-table
+      :headers="$store.state.shop_headers"
+      :items="shop"
+      class="elevation-1"
+    >
       <template v-slot:item.numDays="{ item }">{{ numberDays(item) }}</template>
       <template v-slot:top>
         <!-- // * Edit Dialog: Start -->
@@ -17,19 +21,34 @@
               <v-container>
                 <v-row>
                   <v-col cols="12" sm="6">
-                    <v-text-field v-model="editedItem.vin" label="VIN"></v-text-field>
+                    <v-text-field
+                      v-model="editedItem.vin"
+                      label="VIN"
+                    ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6">
-                    <v-text-field v-model="editedItem.year" label="Year"></v-text-field>
+                    <v-text-field
+                      v-model="editedItem.year"
+                      label="Year"
+                    ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6">
-                    <v-text-field v-model="editedItem.make" label="Make"></v-text-field>
+                    <v-text-field
+                      v-model="editedItem.make"
+                      label="Make"
+                    ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6">
-                    <v-text-field v-model="editedItem.model" label="Model"></v-text-field>
+                    <v-text-field
+                      v-model="editedItem.model"
+                      label="Model"
+                    ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6">
-                    <v-text-field v-model="editedItem.color" label="Color"></v-text-field>
+                    <v-text-field
+                      v-model="editedItem.color"
+                      label="Color"
+                    ></v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
@@ -38,15 +57,21 @@
             <v-card-actions>
               <div class="flex-grow-1"></div>
               <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="save(editedItem)">Save</v-btn>
+              <v-btn color="blue darken-1" text @click="save(editedItem)"
+                >Save</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-dialog>
         <!-- // * Edit Dialog: End -->
       </template>
       <template v-slot:item.action="{ item }">
-        <v-icon color="green" class="mr-2" @click="complete(item)">mdi-check-circle</v-icon>
-        <v-icon color="blue" class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
+        <v-icon color="green" class="mr-2" @click="complete(item)"
+          >mdi-check-circle</v-icon
+        >
+        <v-icon color="blue" class="mr-2" @click="editItem(item)"
+          >mdi-pencil</v-icon
+        >
         <v-icon color="red" @click="deleteItem(item)">mdi-delete</v-icon>
       </template>
     </v-data-table>
@@ -154,6 +179,7 @@ export default {
       shop: db
         .collection("tpo")
         .where("shop", "==", "In process")
+        .orderBy("sold", "desc")
         .orderBy("initial_timestamp")
     };
   }

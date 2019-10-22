@@ -66,9 +66,15 @@
 
             <v-card-actions>
               <div class="flex-grow-1"></div>
-              <v-btn color="blue darken-1" text @click="closeInfo">Cancel</v-btn>
-              <v-btn @click="nosublet(editedItem)" color="success" text>No Sublet</v-btn>
-              <v-btn color="blue darken-1" text @click="complete(editedItem)">Complete Inspection</v-btn>
+              <v-btn color="blue darken-1" text @click="closeInfo"
+                >Cancel</v-btn
+              >
+              <v-btn @click="nosublet(editedItem)" color="success" text
+                >No Sublet</v-btn
+              >
+              <v-btn color="blue darken-1" text @click="complete(editedItem)"
+                >Complete Inspection</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -87,23 +93,38 @@
                 <v-row>
                   <!-- // * VIN -->
                   <v-col cols="12" md="6">
-                    <v-text-field v-model="editedItem.vin" label="VIN"></v-text-field>
+                    <v-text-field
+                      v-model="editedItem.vin"
+                      label="VIN"
+                    ></v-text-field>
                   </v-col>
                   <!-- // * Year -->
                   <v-col cols="12" md="6">
-                    <v-text-field v-model="editedItem.year" label="Year"></v-text-field>
+                    <v-text-field
+                      v-model="editedItem.year"
+                      label="Year"
+                    ></v-text-field>
                   </v-col>
                   <!-- // * Make -->
                   <v-col cols="12" md="6">
-                    <v-text-field v-model="editedItem.make" label="Make"></v-text-field>
+                    <v-text-field
+                      v-model="editedItem.make"
+                      label="Make"
+                    ></v-text-field>
                   </v-col>
                   <!-- // * Model -->
                   <v-col cols="12" md="6">
-                    <v-text-field v-model="editedItem.model" label="Model"></v-text-field>
+                    <v-text-field
+                      v-model="editedItem.model"
+                      label="Model"
+                    ></v-text-field>
                   </v-col>
                   <!-- // * Color -->
                   <v-col cols="12" md="6">
-                    <v-text-field v-model="editedItem.color" label="Color"></v-text-field>
+                    <v-text-field
+                      v-model="editedItem.color"
+                      label="Color"
+                    ></v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
@@ -111,23 +132,31 @@
 
             <v-card-actions>
               <div class="flex-grow-1"></div>
-              <v-btn color="blue darken-1" text @click="closeEdit">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="save(editedItem)">Save</v-btn>
+              <v-btn color="blue darken-1" text @click="closeEdit"
+                >Cancel</v-btn
+              >
+              <v-btn color="blue darken-1" text @click="save(editedItem)"
+                >Save</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-dialog>
         <!-- // * Edit Dialog: End -->
       </template>
       <template v-slot:item.action="{ item }">
-        <v-icon color="orange" class="mr-2" @click="informationSublet(item)">mdi-information</v-icon>
-        <v-icon color="blue" class="mr-2" @click="editSublet(item)">mdi-pencil</v-icon>
+        <v-icon color="orange" class="mr-2" @click="informationSublet(item)"
+          >mdi-information</v-icon
+        >
+        <v-icon color="blue" class="mr-2" @click="editSublet(item)"
+          >mdi-pencil</v-icon
+        >
         <v-icon color="red" @click="deleteItem(item)">mdi-delete</v-icon>
       </template>
     </v-data-table>
     <!-- // * Table: End -->
     <!-- // ! Structure for edit modal -->
     <div class="text-center ma-2">
-      <v-snackbar timeout="2000" v-model="alert">
+      <v-snackbar :timeout="2000" v-model="alert">
         Please make sure you fill out all fields.
         <v-btn color="error" text @click="snackbar = false">Close</v-btn>
       </v-snackbar>
@@ -294,6 +323,7 @@ export default {
       sublet_inspection: db
         .collection("tpo")
         .where("sublet_inspection", "==", "In process")
+        .orderBy("sold", "desc")
         .orderBy("initial_timestamp")
     };
   }

@@ -281,6 +281,7 @@ export default {
         .where("shop", "==", "Complete")
         .where("sublet_inspection", "==", "Complete")
         .where("sublet", "==", "In process")
+        .orderBy("sold", "desc")
         .orderBy("initial_timestamp")
     };
   }

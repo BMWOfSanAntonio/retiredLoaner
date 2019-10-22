@@ -3,12 +3,20 @@
     <!-- // * Title -->
     <div class="mb-4 display-2 font-weight-thin">Detail</div>
     <!-- // * Table: Start -->
-    <v-data-table :headers="$store.state.shop_headers" :items="detail" class="elevation-1">
+    <v-data-table
+      :headers="$store.state.shop_headers"
+      :items="detail"
+      class="elevation-1"
+    >
       <template v-slot:item.numDays="{ item }">{{ numberDays(item) }}</template>
       <template v-slot:item.action="{ item }">
-        <v-icon color="green" class="mr-2" @click="complete(item)">mdi-check-circle</v-icon>
+        <v-icon color="green" class="mr-2" @click="complete(item)"
+          >mdi-check-circle</v-icon
+        >
         <v-icon color="red" @click="deleteItem(item)">mdi-delete</v-icon>
-        <v-icon @click="sendback(item)" class="ml-2" color="primary">mdi-arrow-left-circle</v-icon>
+        <v-icon @click="sendback(item)" class="ml-2" color="primary"
+          >mdi-arrow-left-circle</v-icon
+        >
       </template>
     </v-data-table>
     <!-- // * Table: End -->
@@ -79,6 +87,7 @@ export default {
         .where("sublet", "==", "Complete")
         .where("shop", "==", "Complete")
         .where("detail", "==", "In process")
+        .orderBy("sold", "desc")
         .orderBy("initial_timestamp")
     };
   }
