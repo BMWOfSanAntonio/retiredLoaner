@@ -211,7 +211,7 @@ export default {
           })
           .then(() => {
             db.collection("mail").add({
-              to: "james.shiflett@principleauto.com",
+              to: "barry.laird@principleauto.com",
               message: {
                 subject: "Sublet Complete: " + filterrepair[0].vin + "",
                 text:
