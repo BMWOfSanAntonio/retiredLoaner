@@ -4,7 +4,7 @@
     <div class="mb-4 display-2 font-weight-thin">Sublet Inspection</div>
     <!-- // * Table: Start -->
     <v-data-table
-      :headers="$store.state.shop_headers"
+      :headers="$store.state.sublet_headers"
       :items="sublet_inspection"
       class="elevation-1"
     >

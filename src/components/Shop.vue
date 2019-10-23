@@ -72,7 +72,12 @@
         <v-icon color="blue" class="mr-2" @click="editItem(item)"
           >mdi-pencil</v-icon
         >
-        <v-icon color="red" @click="deleteItem(item)">mdi-delete</v-icon>
+        <v-icon class="mr-2" color="red" @click="deleteItem(item)"
+          >mdi-delete</v-icon
+        >
+      </template>
+      <template v-slot:item.repairs="{ item }">
+        <span v-for="(it, i) in item.repairs" :key="it">{{ it }}, </span>
       </template>
     </v-data-table>
     <!-- // * Table: End -->

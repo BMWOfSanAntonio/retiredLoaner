@@ -215,7 +215,7 @@ export default {
               message: {
                 subject: "Sublet Complete: " + filterrepair[0].vin + "",
                 text:
-                  "This vehicle has been completed in sublet, will now be taken to detail."
+                  "Sublet is complete on this vehicle. It will now be taken to detail."
               }
             });
           });

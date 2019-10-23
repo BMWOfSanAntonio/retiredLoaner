@@ -15,8 +15,7 @@ export default new Vuex.Store({
       "Ozone",
       "Paint"
     ],
-    subletalt: [
-      {
+    subletalt: [{
         name: "Paintless Dent Removal",
         path: "/pdr"
       },
@@ -41,8 +40,7 @@ export default new Vuex.Store({
         path: "/paint"
       }
     ],
-    shop_headers: [
-      {
+    shop_headers: [{
         text: "No. Days",
         value: "numDays"
       },
@@ -69,10 +67,13 @@ export default new Vuex.Store({
       {
         text: "Actions",
         value: "action"
+      },
+      {
+        text: "Repairs",
+        value: "repairs"
       }
     ],
-    sublet_headers: [
-      {
+    sublet_headers: [{
         text: "No. Days",
         value: "numDays"
       },
@@ -103,10 +104,10 @@ export default new Vuex.Store({
       {
         text: "Actions",
         value: "action"
-      }
+      },
+
     ],
-    shop_headersalt: [
-      {
+    shop_headersalt: [{
         text: "VIN",
         value: "vin"
       },
@@ -134,6 +135,27 @@ export default new Vuex.Store({
         text: "Actions",
         value: "action"
       }
+    ],
+    detail: [{
+        text: "VIN",
+        value: "vin"
+      },
+      {
+        text: "Year",
+        value: "year"
+      },
+      {
+        text: "Make",
+        value: "make"
+      },
+      {
+        text: "Model",
+        value: "model"
+      },
+      {
+        text: "Color",
+        value: "color"
+      },
     ],
     years: [
       "2020",
