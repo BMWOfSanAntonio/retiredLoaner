@@ -9,6 +9,19 @@
       class="elevation-1"
     >
       <template v-slot:item.numDays="{ item }">{{ numberDays(item) }}</template>
+      <template v-slot:top>
+        <v-row justify="end" class="mr-5">
+          <v-col cols="12" sm="3">
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-col>
+        </v-row>
+      </template>
       <template v-slot:item.action="{ item }">
         <v-icon color="green" class="mr-2" @click="complete(item)"
           >mdi-check-circle</v-icon

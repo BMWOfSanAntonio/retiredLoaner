@@ -282,7 +282,8 @@ export default new Vuex.Store({
       "Yellow",
       "Orange",
       "Purple",
-      "Gray"
+      "Gray",
+      "Brown"
     ]
   },
   mutations: {},

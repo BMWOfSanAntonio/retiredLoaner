@@ -31,9 +31,9 @@ export default {
     dialog: false,
     dialog1: false,
     repairs: [],
+    // * Edit dialog
     editedIndex: -1,
     editedItem: {}
-    // * Edit dialog
   }),
 
   // ! Vuetify table dependency, DO NOT REMOVE UNLESS YOU KNOW WHAT YOU ARE DOING...

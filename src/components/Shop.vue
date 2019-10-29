@@ -6,10 +6,22 @@
     <v-data-table
       :headers="$store.state.shop_headers"
       :items="shop"
+      :search="search"
       class="elevation-1"
     >
       <template v-slot:item.numDays="{ item }">{{ numberDays(item) }}</template>
       <template v-slot:top>
+        <v-row justify="end" class="mr-5">
+          <v-col cols="12" sm="3">
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-col>
+        </v-row>
         <!-- // * Edit Dialog: Start -->
         <v-dialog v-model="dialog" max-width="500px">
           <v-card>
@@ -97,7 +109,8 @@ export default {
     editedIndex: -1,
     editedItem: {},
     currentTime: Date.now(),
-    state: "started"
+    state: "started",
+    search: ""
   }),
 
   // ! Vuetify table dependency, DO NOT REMOVE UNLESS YOU KNOW WHAT YOU ARE DOING...

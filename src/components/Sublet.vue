@@ -10,6 +10,17 @@
     >
       <template v-slot:item.numDays="{ item }">{{ numberDays(item) }}</template>
       <template v-slot:top>
+        <v-row justify="end" class="mr-5">
+          <v-col cols="12" sm="3">
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-col>
+        </v-row>
         <!-- // * Dialog: Start -->
         <v-dialog v-model="dialog" max-width="500px">
           <v-card>
