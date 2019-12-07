@@ -6,9 +6,23 @@
     <v-data-table
       :headers="$store.state.sublet_headers"
       :items="sublet_inspection"
+      :search="search"
       class="elevation-1"
     >
-      <template v-slot:item.numDays="{ item }">{{ numberDays(item) }}</template>
+      <template v-slot:item.numDays="{ item }">{{
+        elapsedTime(item)
+      }}</template>
+      <template v-slot:item.elapsed="{ item }">{{
+        elapsedTime(item)
+      }}</template>
+      <template v-slot:item.sold="{ item }">
+        <v-img
+          v-if="item.sold && item.sold === true"
+          src="../assets/sold.png"
+          max-height="50px"
+          max-width="50px"
+        ></v-img
+      ></template>
       <template v-slot:top>
         <v-row justify="end" class="mr-5">
           <v-col cols="12" sm="3">
@@ -155,6 +169,20 @@
         <!-- // * Edit Dialog: End -->
       </template>
       <template v-slot:item.action="{ item }">
+        <v-icon
+          v-if="item.sold !== true"
+          color="primary"
+          class="mr-2"
+          @click="sell(item)"
+          >mdi-car</v-icon
+        >
+        <v-icon
+          v-if="item.sold && item.sold === true"
+          color="error"
+          class="mr-2"
+          @click="unsell(item)"
+          >mdi-car</v-icon
+        >
         <v-icon color="orange" class="mr-2" @click="informationSublet(item)"
           >mdi-information</v-icon
         >
@@ -180,7 +208,7 @@
 import { db } from "../main";
 import firebase from "firebase";
 export default {
-  name: "Shop",
+  name: "sublet-inspection",
   props: ["user"],
   data: () => ({
     //   * Database
@@ -196,7 +224,7 @@ export default {
     state: "started",
     alert: false,
     // Search
-    search: ""
+    search: null
   }),
 
   // ! Vuetify table dependency, DO NOT REMOVE UNLESS YOU KNOW WHAT YOU ARE DOING...
@@ -229,6 +257,22 @@ export default {
             sublet_inspection_delete_timestamp: Date.now()
           });
       }
+    },
+    sell(item) {
+      db.collection("tpo")
+        .doc(item.id)
+        .update({
+          sold: true,
+          sold_timestamp: Date.now()
+        });
+    },
+    unsell(item) {
+      db.collection("tpo")
+        .doc(item.id)
+        .update({
+          sold: false,
+          sold_timestamp: ""
+        });
     },
     // * Information modal
     complete(item) {
@@ -280,6 +324,34 @@ export default {
       }
 
       this.closeInfo();
+    },
+    elapsedTime(i) {
+      let minutes = Math.floor(
+        (this.currentTime - i.initial_timestamp) / 60000
+      );
+      if (minutes >= 1440) {
+        let day = Math.floor(minutes / 1440);
+        if (day === 1) {
+          return `${day} day`;
+        } else {
+          return `${day} days`;
+        }
+      } else if (minutes >= 60) {
+        let hour = Math.floor(minutes / 60);
+        if (hour === 1) {
+          return `${hour} hour`;
+        } else {
+          return `${hour} hours`;
+        }
+      } else if (minutes < 60 && minutes !== 0) {
+        if (minutes === 1) {
+          return `${Math.floor(minutes)} minute`;
+        } else {
+          return `${Math.floor(minutes)} minutes`;
+        }
+      } else if (minutes === 0) {
+        return `A few seconds ago`;
+      }
     },
     closeInfo() {
       this.dialog = false;

@@ -6,6 +6,7 @@
         <span class="font-weight-light">Tracker</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-btn v-if="user" text to="/reports">Reports</v-btn>
       <v-btn v-if="user" text @click="logout">Logout</v-btn>
     </v-app-bar>
 

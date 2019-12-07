@@ -4,11 +4,27 @@
     <div class="mb-4 display-2 font-weight-thin">Sublet</div>
     <!-- // * Table: Start -->
     <v-data-table
-      :headers="$store.state.sublet_headers"
+      :headers="$store.state.subletsublet"
       :items="sublet"
+      :search="search"
       class="elevation-1"
     >
       <template v-slot:item.numDays="{ item }">{{ numberDays(item) }}</template>
+      <template v-slot:item.elapsed="{ item }">{{
+        elapsedTime(item)
+      }}</template>
+      <template v-slot:item.sold="{ item }">
+        <v-img
+          v-if="item.sold && item.sold === true"
+          src="../assets/sold.png"
+          max-height="50px"
+          max-width="50px"
+        ></v-img
+      ></template>
+      <template v-slot:item.status="{ item }">
+        <span v-if="item.shop === 'In process'">Shop Incomplete</span>
+        <span v-else-if="item.shop === 'Complete'">Shop Complete</span>
+      </template>
       <template v-slot:top>
         <v-row justify="end" class="mr-5">
           <v-col cols="12" sm="3">
@@ -118,6 +134,20 @@
         <!-- <v-progress-linear :value="progress(item)"></v-progress-linear> -->
       </template>
       <template v-slot:item.action="{ item }">
+        <v-icon
+          v-if="item.sold !== true"
+          color="primary"
+          class="mr-2"
+          @click="sell(item)"
+          >mdi-car</v-icon
+        >
+        <v-icon
+          v-if="item.sold && item.sold === true"
+          color="error"
+          class="mr-2"
+          @click="unsell(item)"
+          >mdi-car</v-icon
+        >
         <!-- // * Will show the dialog window -->
         <v-icon color="blue" class="mr-2" @click="editItem(item)"
           >mdi-information</v-icon
@@ -147,7 +177,8 @@ export default {
     // * Progress bar
     level: "",
     currentTime: Date.now(),
-    state: "started"
+    state: "started",
+    search: ""
   }),
 
   // ! Vuetify table dependency, DO NOT REMOVE UNLESS YOU KNOW WHAT YOU ARE DOING...
@@ -177,9 +208,24 @@ export default {
           });
       }
     },
+    sell(item) {
+      db.collection("tpo")
+        .doc(item.id)
+        .update({
+          sold: true,
+          sold_timestamp: Date.now()
+        });
+    },
+    unsell(item) {
+      db.collection("tpo")
+        .doc(item.id)
+        .update({
+          sold: false,
+          sold_timestamp: ""
+        });
+    },
     // * Modal Functions
     completeRepair(repair, item) {
-      console.log(item);
       // * Filters the sublet array for a vin match, returns all matches (ideally one) to an array. You have to access it through an index [0]
       let filterrepair = this.sublet.filter(sublet => {
         return sublet.vin == item.vin;
@@ -211,9 +257,7 @@ export default {
       let filterrepair = this.sublet.filter(sublet => {
         return sublet.vin == item.vin;
       });
-      console.log(progress);
       if (progress == 100) {
-        console.log(progress);
         db.collection("tpo")
           .doc(filterrepair[0].id)
           .update({
@@ -231,6 +275,34 @@ export default {
             });
           });
         this.close();
+      }
+    },
+    elapsedTime(i) {
+      let minutes = Math.floor(
+        (this.currentTime - i.sublet_inspection_complete_timestamp) / 60000
+      );
+      if (minutes >= 1440) {
+        let day = Math.floor(minutes / 1440);
+        if (day === 1) {
+          return `${day} day`;
+        } else {
+          return `${day} days`;
+        }
+      } else if (minutes >= 60) {
+        let hour = Math.floor(minutes / 60);
+        if (hour === 1) {
+          return `${hour} hour`;
+        } else {
+          return `${hour} hours`;
+        }
+      } else if (minutes < 60 && minutes !== 0) {
+        if (minutes === 1) {
+          return `${Math.floor(minutes)} minute`;
+        } else {
+          return `${Math.floor(minutes)} minutes`;
+        }
+      } else if (minutes === 0) {
+        return `A few seconds ago`;
       }
     },
     sendback(i) {
@@ -257,18 +329,44 @@ export default {
     // * Other
     progress(item) {
       let count = 0;
-      let length = item.repairs.length;
-      item.repairs.forEach(element => {
-        console.log(element);
-        if (element.includes("Complete")) {
-          count++;
-        }
-      });
-      this.level = (count / length) * 100;
-      return (count / length) * 100;
+      if (item.repairs) {
+        let length = item.repairs.length;
+        item.repairs.forEach(element => {
+          if (element.includes("Complete")) {
+            count++;
+          }
+        });
+        this.level = (count / length) * 100;
+        return (count / length) * 100;
+      }
     },
     numberDays(i) {
-      return Math.floor((this.currentTime - i.initial_timestamp) / 86400000);
+      let minutes = Math.floor(
+        (this.currentTime - i.initial_timestamp) / 60000
+      );
+      if (minutes >= 1440) {
+        let day = Math.floor(minutes / 1440);
+        if (day === 1) {
+          return `${day} day`;
+        } else {
+          return `${day} days`;
+        }
+      } else if (minutes >= 60) {
+        let hour = Math.floor(minutes / 60);
+        if (hour === 1) {
+          return `${hour} hour`;
+        } else {
+          return `${hour} hours`;
+        }
+      } else if (minutes < 60 && minutes !== 0) {
+        if (minutes === 1) {
+          return `${Math.floor(minutes)} minute`;
+        } else {
+          return `${Math.floor(minutes)} minutes`;
+        }
+      } else if (minutes === 0) {
+        return `A few seconds ago`;
+      }
     },
     // * Other Methods
     updateCurrentTime: function() {
@@ -289,8 +387,7 @@ export default {
     return {
       sublet: db
         .collection("tpo")
-        .where("shop", "==", "Complete")
-        .where("sublet_inspection", "==", "Complete")
+        .where("sublet_inspection", "==", "Complete").where('shop', '==', 'Complete')
         .where("sublet", "==", "In process")
         .orderBy("sold", "desc")
         .orderBy("initial_timestamp")

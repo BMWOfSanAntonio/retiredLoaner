@@ -8,7 +8,8 @@
         color="green darken-2"
         dark
         dismissible
-      >Vehicle has been added!</v-alert>
+        >Vehicle has been added!</v-alert
+      >
     </div>
     <v-card class="mt-5">
       <v-card-title>
@@ -24,12 +25,21 @@
 
             <!-- // * Year -->
             <v-col cols="12" sm="4">
-              <v-select v-model="year" :items="$store.state.years" label="Year*" required></v-select>
+              <v-select
+                v-model="year"
+                :items="$store.state.years"
+                label="Year*"
+                required
+              ></v-select>
             </v-col>
 
             <!-- // * Make -->
             <v-col cols="12" sm="6" md="4">
-              <v-select v-model="make" :items="$store.state.makes" label="Make*"></v-select>
+              <v-select
+                v-model="make"
+                :items="$store.state.makes"
+                label="Make*"
+              ></v-select>
             </v-col>
 
             <!-- // * Model -->
@@ -45,7 +55,11 @@
 
             <!-- // * Color -->
             <v-col cols="12" sm="12">
-              <v-select v-model="color" :items="$store.state.colors" label="Color*"></v-select>
+              <v-select
+                v-model="color"
+                :items="$store.state.colors"
+                label="Color*"
+              ></v-select>
             </v-col>
           </v-row>
         </v-container>

@@ -4,7 +4,9 @@
       <v-col cols="12">
         <v-card class="mx-auto" max-width="500">
           <v-card-title>TPO Tracker Login</v-card-title>
-          <v-card-text>Please login with your Principle Auto account.</v-card-text>
+          <v-card-text
+            >Please login with your Principle Auto account.</v-card-text
+          >
           <v-card-actions>
             <v-btn @click="login" text>Login</v-btn>
           </v-card-actions>
@@ -47,7 +49,6 @@ export default {
                 this.$router.push("/sublet");
               }
             } else {
-              console.log(cred);
               ref.set({
                 display_name: cred.user.displayName,
                 user_id: cred.user.uid,
@@ -61,7 +62,6 @@ export default {
         .catch(err => {
           alert("Oops. " + err.message);
         });
-      console.log("done");
     }
   }
 };

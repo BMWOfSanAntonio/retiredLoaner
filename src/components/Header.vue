@@ -64,7 +64,7 @@
                   </v-col>
 
                   <!-- // * Color -->
-                  <v-col cols="12" sm="12">
+                  <v-col cols="12" sm="6">
                     <v-select
                       v-model="color"
                       :items="$store.state.colors"
@@ -72,13 +72,30 @@
                     ></v-select>
                   </v-col>
 
-                  <!-- // * Sold -->
                   <v-col>
+                    <v-select
+                      v-model="type"
+                      :items="$store.state.type"
+                      label="Type of Vehicle*"
+                    ></v-select>
+                  </v-col>
+
+                  <!-- // * Sold -->
+                  <v-col cols="12" sm="6">
                     <div class="body-1">Is this a sold unit?</div>
                     <v-radio-group v-model="sold">
                       <v-radio label="Yes" :value="true"></v-radio>
                       <v-radio label="No" :value="false"></v-radio>
                     </v-radio-group>
+                  </v-col>
+
+                  <v-col cols="12" sm="6">
+                    <v-text-field
+                      v-model="ro"
+                      label="RO #"
+                      hint="Complete repair order number goes here..."
+                      persistent-hint
+                    ></v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
@@ -130,7 +147,9 @@ export default {
       make: null,
       model: null,
       color: null,
+      ro: null,
       sold: null,
+      type: null,
       //   * Dialog
       dialog: false,
       // * Database pullins
@@ -147,7 +166,9 @@ export default {
         this.make !== null &&
         this.model !== null &&
         this.color !== null &&
-        this.sold !== null
+        this.sold !== null &&
+        this.ro !== null &&
+        this.type !== null
       ) {
         db.collection("tpo").add({
           // * Form Values
@@ -156,6 +177,7 @@ export default {
           make: this.make,
           model: this.model,
           color: this.color,
+          type: this.type,
           // * Timestamps
           initial_timestamp: Date.now(),
           // * Statuses
@@ -165,7 +187,8 @@ export default {
           detail: "In process",
           // * Extras
           repairs: [],
-          sold: this.sold
+          sold: this.sold,
+          ro: this.ro
         });
         // Resetting the values to null
         this.vin = null;
@@ -175,6 +198,7 @@ export default {
         this.color = null;
         // * Closes the modal window
         this.dialog = false;
+        this.type = null;
       } else {
         // * Shows the snackbar if you did not fill out the form completely. Snack bar is located at the bottom on the component.
         this.alert = true;

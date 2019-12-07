@@ -1,11 +1,11 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import firebase from "firebase";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    type: ["CPO", "Non-CPO", "Value Direct"],
     // * Lists
     sublet: [
       "Paintless Dent Removal",
@@ -15,7 +15,8 @@ export default new Vuex.Store({
       "Ozone",
       "Paint"
     ],
-    subletalt: [{
+    subletalt: [
+      {
         name: "Paintless Dent Removal",
         path: "/pdr"
       },
@@ -40,9 +41,18 @@ export default new Vuex.Store({
         path: "/paint"
       }
     ],
-    shop_headers: [{
-        text: "No. Days",
+    shop_headers: [
+      {
+        text: "Age",
         value: "numDays"
+      },
+      {
+        text: "Elapsed Time in Queue",
+        value: "elapsed"
+      },
+      {
+        text: "RO #",
+        value: "ro"
       },
       {
         text: "VIN",
@@ -65,17 +75,25 @@ export default new Vuex.Store({
         value: "color"
       },
       {
+        text: "Status",
+        value: "status"
+      },
+      {
         text: "Actions",
         value: "action"
       },
       {
-        text: "Repairs",
-        value: "repairs"
+        value: "sold"
       }
     ],
-    sublet_headers: [{
-        text: "No. Days",
+    sublet_headers: [
+      {
+        text: "Age",
         value: "numDays"
+      },
+      {
+        text: "Elapsed Time in Queue",
+        value: "elapsed"
       },
       {
         text: "VIN",
@@ -98,6 +116,47 @@ export default new Vuex.Store({
         value: "color"
       },
       {
+        text: "Actions",
+        value: "action"
+      },
+      {
+        value: "sold"
+      }
+    ],
+    subletsublet: [
+      {
+        text: "Age",
+        value: "numDays"
+      },
+      {
+        text: "Elapsed Time in Queue",
+        value: "elapsed"
+      },
+      {
+        text: "VIN",
+        value: "vin"
+      },
+      {
+        text: "Year",
+        value: "year"
+      },
+      {
+        text: "Make",
+        value: "make"
+      },
+      {
+        text: "Model",
+        value: "model"
+      },
+      {
+        text: "Color",
+        value: "color"
+      },
+      {
+        text: "Status",
+        value: "status"
+      },
+      {
         text: "Repairs",
         value: "repairs"
       },
@@ -105,9 +164,12 @@ export default new Vuex.Store({
         text: "Actions",
         value: "action"
       },
-
+      {
+        value: "sold"
+      }
     ],
-    shop_headersalt: [{
+    shop_headersalt: [
+      {
         text: "VIN",
         value: "vin"
       },
@@ -136,26 +198,65 @@ export default new Vuex.Store({
         value: "action"
       }
     ],
-    detail: [{
+    // Detail Headers (Manager View)
+    detailManager: [
+      {
+        text: "Age",
+        value: "numDays"
+      },
+      {
+        text: "Elapsed Time in Queue",
+        value: "elapsed"
+      },
+      {
         text: "VIN",
-        value: "vin"
+        value: "data.vin"
       },
       {
         text: "Year",
-        value: "year"
+        value: "data.year"
       },
       {
         text: "Make",
-        value: "make"
+        value: "data.make"
       },
       {
         text: "Model",
-        value: "model"
+        value: "data.model"
       },
       {
         text: "Color",
-        value: "color"
+        value: "data.color"
       },
+      {
+        text: "Actions",
+        value: "action"
+      },
+      {
+        value: "sold"
+      }
+    ],
+    detail: [
+      {
+        text: "VIN",
+        value: "data.vin"
+      },
+      {
+        text: "Year",
+        value: "data.year"
+      },
+      {
+        text: "Make",
+        value: "data.make"
+      },
+      {
+        text: "Model",
+        value: "data.model"
+      },
+      {
+        text: "Color",
+        value: "data.color"
+      }
     ],
     years: [
       "2020",

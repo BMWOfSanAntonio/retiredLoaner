@@ -18,6 +18,7 @@ import Ozone from "./views/subviews/Ozone";
 import Paint from "./views/subviews/Paint";
 // * Login
 import Login from "./views/Login";
+import Reports from "./views/Reports";
 
 Vue.use(Router);
 
@@ -107,6 +108,11 @@ const router = new Router({
       path: "/login",
       name: "Login",
       component: Login
+    },
+    {
+      path: "/reports",
+      name: "Reports",
+      component: Reports
     }
   ]
 });

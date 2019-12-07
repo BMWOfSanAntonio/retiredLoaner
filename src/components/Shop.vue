@@ -9,7 +9,12 @@
       :search="search"
       class="elevation-1"
     >
-      <template v-slot:item.numDays="{ item }">{{ numberDays(item) }}</template>
+      <template v-slot:item.numDays="{ item }">{{
+        elapsedTime(item)
+      }}</template>
+      <template v-slot:item.elapsed="{ item }">{{
+        elapsedTime(item)
+      }}</template>
       <template v-slot:top>
         <v-row justify="end" class="mr-5">
           <v-col cols="12" sm="3">
@@ -62,6 +67,50 @@
                       label="Color"
                     ></v-text-field>
                   </v-col>
+                  <v-col>
+                    <v-text-field
+                      v-model="editedItem.ro"
+                      label="RO #"
+                    ></v-text-field>
+                  </v-col>
+                  <!-- Sublet working to be performed -->
+                  <v-col cols="12">
+                    <div class="title">Sublet Work:</div>
+                    <div class="body-1 font-weight-bold">
+                      Sublet Inspection Comments:
+                    </div>
+                    <ul>
+                      <li>
+                        {{ editedItem.comments }}
+                      </li>
+                    </ul>
+                    <div class="body-1 font-weight-bold">
+                      Sublet to Be Performed:
+                    </div>
+                    <template v-for="repair in editedItem.repairs">
+                      <!-- // * If the repair string contains the word "Complete" then this will show, will be green -->
+                      <v-chip
+                        v-if="repair.includes('Complete')"
+                        @click="completeRepair(repair, editedItem)"
+                        dark
+                        class="mr-1"
+                        color="success"
+                        :key="repair"
+                        >{{ repair }}</v-chip
+                      >
+
+                      <!-- // * If the repair has not been completed then it will show up gray -->
+                      <v-chip
+                        v-else
+                        @click="completeRepair(repair, editedItem)"
+                        dark
+                        class="mr-1"
+                        color="null"
+                        :key="repair"
+                        >{{ repair }}</v-chip
+                      >
+                    </template>
+                  </v-col>
                 </v-row>
               </v-container>
             </v-card-text>
@@ -77,20 +126,82 @@
         </v-dialog>
         <!-- // * Edit Dialog: End -->
       </template>
+      <template v-slot:item.status="{ item }">
+        <span v-if="item.repairs && item.sublet_inspection === 'In process'"
+          >No Sublet Inspection Performed</span
+        >
+        <span
+          v-else-if="
+            (item.repairs === null) & (item.sublet_inspection === 'Complete')
+          "
+          >No Sublet Needed</span
+        >
+        <span v-else-if="item.repairs !== null && item.repairs.length > 0"
+          >Needs Sublet</span
+        >
+        <span v-else>Sublet Completed</span>
+      </template>
       <template v-slot:item.action="{ item }">
-        <v-icon color="green" class="mr-2" @click="complete(item)"
-          >mdi-check-circle</v-icon
-        >
-        <v-icon color="blue" class="mr-2" @click="editItem(item)"
-          >mdi-pencil</v-icon
-        >
-        <v-icon class="mr-2" color="red" @click="deleteItem(item)"
-          >mdi-delete</v-icon
-        >
+        <!-- Menu -->
+        <div class="text-center">
+          <v-menu offset-y>
+            <template v-slot:activator="{ on }">
+              <v-btn small color="primary" v-on="on">
+                See Actions
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item v-if="item.sold !== true">
+                <v-list-item-title @click="sell(item)">
+                  <v-icon class="mr-1" color="success">mdi-currency-usd</v-icon>
+                  Mark Sold Unit
+                </v-list-item-title>
+              </v-list-item>
+              <v-list-item v-if="item.sold === true">
+                <v-list-item-title @click="unsell(item)">
+                  <v-icon class="mr-1" color="error"
+                    >mdi-currency-usd-off</v-icon
+                  >
+                  Unmark Sold Unit
+                </v-list-item-title>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-title @click="sell(item)">
+                  <v-icon class="mr-1" color="warning">mdi-car-wash</v-icon>
+                  Mark Avalible for Detail
+                </v-list-item-title>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-title @click="sell(item)">
+                  <v-icon class="mr-1" color="success">mdi-check-bold</v-icon>
+                  Complete
+                </v-list-item-title>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-title @click="sell(item)">
+                  <v-icon class="mr-1" color="info">mdi-pencil</v-icon>
+                  Edit
+                </v-list-item-title>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-title @click="sell(item)">
+                  <v-icon class="mr-1" color="error">mdi-delete</v-icon>
+                  Delete
+                </v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </div>
       </template>
-      <template v-slot:item.repairs="{ item }">
-        <span v-for="(it, i) in item.repairs" :key="it">{{ it }}, </span>
-      </template>
+      <template v-slot:item.sold="{ item }">
+        <v-img
+          class="image"
+          v-if="item.sold && item.sold === true"
+          src="../assets/sold.png"
+          max-height="50px"
+          max-width="50px"
+        ></v-img
+      ></template>
     </v-data-table>
     <!-- // * Table: End -->
   </v-container>
@@ -110,7 +221,13 @@ export default {
     editedItem: {},
     currentTime: Date.now(),
     state: "started",
-    search: ""
+    search: "",
+    actions: [
+      {
+        title: "Sell Car",
+        icon: "mdi-car-wash"
+      }
+    ]
   }),
 
   // ! Vuetify table dependency, DO NOT REMOVE UNLESS YOU KNOW WHAT YOU ARE DOING...
@@ -149,7 +266,49 @@ export default {
           shop_associate: this.user.displayName
         });
     },
+    sell(item) {
+      db.collection("tpo")
+        .doc(item.id)
+        .update({
+          sold: true,
+          sold_timestamp: Date.now()
+        });
+    },
+    unsell(item) {
+      db.collection("tpo")
+        .doc(item.id)
+        .update({
+          sold: false,
+          sold_timestamp: ""
+        });
+    },
     // * Modal
+    completeRepair(repair, item) {
+      // * Filters the sublet array for a vin match, returns all matches (ideally one) to an array. You have to access it through an index [0]
+      let filterrepair = this.shop.filter(shop => {
+        return shop.vin == item.vin;
+      });
+
+      db.collection("tpo")
+        .doc(filterrepair[0].id)
+        .update({
+          repairs: firebase.firestore.FieldValue.arrayUnion(
+            repair + " - Complete"
+          )
+        });
+      db.collection("tpo")
+        .doc(filterrepair[0].id)
+        .update({
+          repairs: firebase.firestore.FieldValue.arrayRemove(repair)
+        })
+        .then(() => {
+          filterrepair = this.shop.filter(shop => {
+            return shop.vin == item.vin;
+          });
+          this.editedIndex = this.shop.indexOf(filterrepair[0]);
+          this.editedItem = Object.assign({}, filterrepair[0]);
+        });
+    },
     close() {
       this.dialog = false;
       setTimeout(() => {
@@ -171,12 +330,41 @@ export default {
           make: item.make,
           model: item.model,
           color: item.color,
+          ro: item.ro,
           shop_edit_timestamp: Date.now()
         });
       this.close();
     },
     numberDays(i) {
       return Math.floor((this.currentTime - i.initial_timestamp) / 86400000);
+    },
+    elapsedTime(i) {
+      let minutes = Math.floor(
+        (this.currentTime - i.initial_timestamp) / 60000
+      );
+      if (minutes >= 1440) {
+        let day = Math.floor(minutes / 1440);
+        if (day === 1) {
+          return `${day} day`;
+        } else {
+          return `${day} days`;
+        }
+      } else if (minutes >= 60) {
+        let hour = Math.floor(minutes / 60);
+        if (hour === 1) {
+          return `${hour} hour`;
+        } else {
+          return `${hour} hours`;
+        }
+      } else if (minutes < 60 && minutes !== 0) {
+        if (minutes === 1) {
+          return `${Math.floor(minutes)} minute`;
+        } else {
+          return `${Math.floor(minutes)} minutes`;
+        }
+      } else if (minutes === 0) {
+        return `A few seconds ago`;
+      }
     },
     // * Other Methods
     updateCurrentTime: function() {
@@ -204,5 +392,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
