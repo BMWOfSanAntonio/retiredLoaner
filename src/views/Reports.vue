@@ -171,6 +171,7 @@ export default {
   },
   computed: {
     totalInProgress() {
+      console.log(this.inProgress.length);
       return this.inProgress.length;
     },
     oldestInProgress() {
@@ -265,40 +266,39 @@ export default {
     return {
       complete: db
         .collection("tpo")
-        .where("detail", "==", "Complete")
         .where("detail_complete_timestamp", "<=", Date.now())
         .where("detail_complete_timestamp", ">=", lapse)
         .orderBy("detail_complete_timestamp"),
       complete90: db
         .collection("tpo")
-        .where("detail", "==", "Complete")
+        .where("detail", "==", false)
         .where("detail_complete_timestamp", "<=", Date.now())
         .where("detail_complete_timestamp", ">=", lapsed)
         .orderBy("detail_complete_timestamp"),
       averageAge30: db
         .collection("tpo")
-        .where("detail", "==", "Complete")
+        .where("detail", "==", false)
         .where("detail_complete_timestamp", "<=", Date.now())
         .where("detail_complete_timestamp", ">=", lapse)
         .orderBy("detail_complete_timestamp"),
-      inProgress: db.collection("tpo").where("detail", "==", "In process"),
+      inProgress: db.collection("tpo").where("detail", "==", true),
       zeroToFifteen: db
         .collection("tpo")
-        .where("detail", "==", "In process")
+        .where("detail", "==", true)
         .where("initial_timestamp", "<=", Date.now())
         .where("initial_timestamp", ">=", fifteen),
       sixteenToThirty: db
         .collection("tpo")
-        .where("detail", "==", "In process")
+        .where("detail", "==", true)
         .where("initial_timestamp", "<=", sixteen)
         .where("initial_timestamp", ">=", lapse),
       thirtyPlus: db
         .collection("tpo")
-        .where("detail", "==", "In process")
+        .where("detail", "==", true)
         .where("initial_timestamp", "<", lapse),
       oldestFifteen: db
         .collection("tpo")
-        .where("detail", "==", "In process")
+        .where("detail", "==", true)
         .orderBy("initial_timestamp")
         .limit(15)
     };

@@ -1,7 +1,5 @@
 <template>
   <v-container class="sublet mt-10">
-    <!-- // * Title -->
-    <div class="mb-4 display-2 font-weight-thin">Sublet</div>
     <!-- // * Table: Start -->
     <v-data-table
       :headers="$store.state.subletsublet"
@@ -22,11 +20,16 @@
         ></v-img
       ></template>
       <template v-slot:item.status="{ item }">
-        <span v-if="item.shop === 'In process'">Shop Incomplete</span>
-        <span v-else-if="item.shop === 'Complete'">Shop Complete</span>
+        <span v-if="item.shop === true">Shop Incomplete</span>
+        <span v-else-if="item.shop === false">Shop Complete</span>
       </template>
       <template v-slot:top>
         <v-row justify="end" class="mr-5">
+          <v-col>
+            <v-card-title class="display-2 font-weight-light">
+              Sublet
+            </v-card-title>
+          </v-col>
           <v-col cols="12" sm="3">
             <v-text-field
               v-model="search"
@@ -49,35 +52,42 @@
               <v-container>
                 <!-- // * Vehicle Information -->
                 <v-row>
-                  <!-- // * VIN -->
                   <v-col cols="12">
-                    <div class="title">VIN: {{ editedItem.vin }}</div>
+                    <div class="title">Information:</div>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <!-- // * VIN -->
+                  <v-col cols="6">
+                    <div class="body-1">VIN: {{ editedItem.vin }}</div>
                   </v-col>
                   <!-- // * Year -->
-                  <v-col cols="12">
-                    <div class="title">Year: {{ editedItem.year }}</div>
+                  <v-col cols="6">
+                    <div class="body-1">Year: {{ editedItem.year }}</div>
                   </v-col>
                   <!-- // * Make-->
-                  <v-col cols="12">
-                    <div class="title">Make: {{ editedItem.make }}</div>
+                  <v-col cols="6">
+                    <div class="body-1">Make: {{ editedItem.make }}</div>
                   </v-col>
                   <!-- // * Model -->
-                  <v-col cols="12">
-                    <div class="title">Model: {{ editedItem.model }}</div>
+                  <v-col cols="6">
+                    <div class="body-1">Model: {{ editedItem.model }}</div>
                   </v-col>
                   <!-- // * Color -->
-                  <v-col cols="12">
-                    <div class="title">Color: {{ editedItem.color }}</div>
+                  <v-col cols="6">
+                    <div class="body-1">Color: {{ editedItem.color }}</div>
                   </v-col>
                   <!-- // * Comments -->
-                  <v-col cols="12">
-                    <div class="title">
+                  <v-col cols="6">
+                    <div class="body-1">
                       Comments:
                       <span class="comment-text">{{
                         editedItem.comments
                       }}</span>
                     </div>
                   </v-col>
+                </v-row>
+                <v-row class="mt-5">
                   <!-- // * Repair Information -->
                   <v-col cols="12">
                     <!-- Title -->
@@ -133,27 +143,63 @@
         </v-progress-linear>
         <!-- <v-progress-linear :value="progress(item)"></v-progress-linear> -->
       </template>
+      <!-- more actions button and menu -->
       <template v-slot:item.action="{ item }">
-        <v-icon
-          v-if="item.sold !== true"
-          color="primary"
-          class="mr-2"
-          @click="sell(item)"
-          >mdi-car</v-icon
-        >
-        <v-icon
-          v-if="item.sold && item.sold === true"
-          color="error"
-          class="mr-2"
-          @click="unsell(item)"
-          >mdi-car</v-icon
-        >
-        <!-- // * Will show the dialog window -->
-        <v-icon color="blue" class="mr-2" @click="editItem(item)"
-          >mdi-information</v-icon
-        >
-        <!-- // * Delete an item -->
-        <v-icon color="red" @click="deleteItem(item)">mdi-delete</v-icon>
+        <div>
+          <v-menu offset-y>
+            <template v-slot:activator="{ on }">
+              <!-- see more actions button -->
+              <v-btn small color="primary" v-on="on">
+                See Actions
+              </v-btn>
+            </template>
+
+            <!-- action links -->
+            <v-list>
+              <!-- mark as sold -->
+              <v-list-item v-if="item.sold !== true">
+                <v-list-item-title @click="sell(item)">
+                  <v-icon class="mr-1" color="success">mdi-currency-usd</v-icon>
+                  Mark Sold Unit
+                </v-list-item-title>
+              </v-list-item>
+
+              <!-- unmark as sold -->
+              <v-list-item v-if="item.sold === true">
+                <v-list-item-title @click="unsell(item)">
+                  <v-icon class="mr-1" color="error"
+                    >mdi-currency-usd-off</v-icon
+                  >
+                  Unmark Sold Unit
+                </v-list-item-title>
+              </v-list-item>
+
+              <!-- send to detail -->
+              <v-list-item>
+                <v-list-item-title @click="detail(item)">
+                  <v-icon class="mr-1" color="warning">mdi-car-wash</v-icon>
+                  Mark Avalible for Detail
+                </v-list-item-title>
+              </v-list-item>
+
+              <!-- complete -->
+              <v-list-item>
+                <v-list-item-title @click="editItem(item)">
+                  <v-icon class="mr-1" color="success">mdi-check-bold</v-icon>
+                  {{ "Information & Sublet Completion" }}
+                </v-list-item-title>
+              </v-list-item>
+
+              <!-- delete -->
+              <v-list-item>
+                <v-list-item-title @click="deleteItem(item)">
+                  <v-icon class="mr-1" color="error">mdi-delete</v-icon>
+                  Delete
+                </v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </div>
       </template>
     </v-data-table>
     <!-- // * Table: End -->
@@ -189,6 +235,23 @@ export default {
   },
 
   methods: {
+    // send to detail
+    // will still go through the flow of the process, won't go back to detail.
+    detail(item) {
+      // already gone to detail, won't let it go back
+      if (item.shopToDetail === true) {
+        alert("Vehicle is either in detail or has already been detailed.");
+      } else {
+        db.collection("tpo")
+          .doc(item.id)
+          .update({
+            detail: true,
+            shopToDetail: true,
+            toDetailTimestamp: Date.now(),
+            shopToDetailAssociate: firebase.auth().currentUser.displayName
+          });
+      }
+    },
     //   * Buttons
     editItem(item) {
       this.editedIndex = this.sublet.indexOf(item);
@@ -196,15 +259,19 @@ export default {
       this.dialog = true;
     },
 
+    // delete item
     deleteItem(item) {
       let answer = confirm("Are you sure you want to delete this item?");
       if (answer) {
         db.collection("tpo")
           .doc(item.id)
           .update({
-            sublet: "Deleted",
-            sublet_inspection: "Deleted",
-            shop_delete_timestamp: Date.now()
+            shop: false,
+            sublet_inspection: false,
+            detail: false,
+            sublet: false,
+            sublet_delete_timestamp: Date.now(),
+            sublet_delete_user: firebase.auth().currentUser.displayName
           });
       }
     },
@@ -258,23 +325,52 @@ export default {
         return sublet.vin == item.vin;
       });
       if (progress == 100) {
-        db.collection("tpo")
-          .doc(filterrepair[0].id)
-          .update({
-            sublet: "Complete",
-            sublet_complete_timestamp: Date.now()
-          })
-          .then(() => {
-            db.collection("mail").add({
-              to: "barry.laird@principleauto.com",
-              message: {
-                subject: "Sublet Complete: " + filterrepair[0].vin + "",
-                text:
-                  "Sublet is complete on this vehicle. It will now be taken to detail."
-              }
+        if ((!item.shopToDetail || item.shopToDetail === false) && item.shop_complete_timestamp) {
+          db.collection("tpo")
+            .doc(filterrepair[0].id)
+            .update({
+              sublet: false,
+              detail: true,
+              sublet_complete_user: firebase.auth().currentUser.displayName,
+              sublet_complete_timestamp: Date.now()
+            })
+            .then(() => {
+              db.collection("mail").add({
+                to: "barry.laird@principleauto.com",
+                message: {
+                  subject: "Sublet Complete: " + filterrepair[0].vin + "",
+                  text:
+                    "Sublet is complete on this vehicle. It will now be taken to detail."
+                }
+              });
             });
-          });
-        this.close();
+          this.close();
+          console.log("sending to detail....");
+        } else {
+          db.collection("tpo")
+            .doc(filterrepair[0].id)
+            .update({
+              sublet: false,
+              sublet_complete_user: firebase.auth().currentUser.displayName,
+              sublet_complete_timestamp: Date.now()
+            })
+            .then(() => {
+              db.collection("mail").add({
+                to: "barry.laird@principleauto.com",
+                message: {
+                  subject: "Sublet Complete: " + filterrepair[0].vin + "",
+                  text:
+                    "Sublet is complete on this vehicle. It will now be taken to detail."
+                }
+              });
+            });
+          this.close();
+          console.log("This car already went to detail....");
+        }
+      } else {
+        alert(
+          "Please make sure all sublet is complete before trying to complete this request."
+        );
       }
     },
     elapsedTime(i) {
@@ -387,8 +483,8 @@ export default {
     return {
       sublet: db
         .collection("tpo")
-        .where("sublet_inspection", "==", "Complete").where('shop', '==', 'Complete')
-        .where("sublet", "==", "In process")
+        .where("sublet_inspection", "==", false)
+        .where("sublet", "==", true)
         .orderBy("sold", "desc")
         .orderBy("initial_timestamp")
     };
@@ -403,7 +499,7 @@ export default {
 
 .comment-text {
   font-size: 16px;
-  color: black;
+  color: grey;
   font-weight: normal;
   display: block;
 }

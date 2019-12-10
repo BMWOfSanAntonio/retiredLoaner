@@ -7,18 +7,16 @@
       :search="search"
       class="elevation-1"
     >
-      <template v-slot:item.numDays="{ item }">{{
-        numberDays(item.data)
-      }}</template>
+      <template v-slot:item.numDays="{ item }">{{ numberDays(item) }}</template>
       <template v-slot:item.elapsed="{ item }">{{
-        elapsedTime(item.data)
+        elapsedTime(item)
       }}</template>
       <template v-slot:top>
         <v-row align="center" class="mr-5">
           <v-col>
-            <div class="font-weight-light display-1 ml-4">
+            <v-card-title class="display-2 font-weight-light">
               Detail
-            </div>
+            </v-card-title>
           </v-col>
           <v-col cols="12" sm="3">
             <v-text-field
@@ -31,39 +29,69 @@
           </v-col>
         </v-row>
       </template>
+
+      <!-- more actions button and menu -->
       <template v-slot:item.action="{ item }">
-        <v-icon
-          v-if="item.sold !== true"
-          color="primary"
-          class="mr-2"
-          @click="sell(item.data)"
-          >mdi-car</v-icon
-        >
-        <v-icon
-          v-if="item.data.sold && item.data.sold === true"
-          color="error"
-          class="mr-2"
-          @click="unsell(item.data)"
-          >mdi-car</v-icon
-        >
-        <v-icon color="green" class="mr-2" @click="complete(item.data)"
-          >mdi-check-circle</v-icon
-        >
-        <v-icon color="red" @click="deleteItem(item.data)">mdi-delete</v-icon>
-        <v-icon @click="sendback(item.data)" class="ml-2" color="primary"
-          >mdi-arrow-left-circle</v-icon
-        >
+        <div>
+          <v-menu offset-y>
+            <template v-slot:activator="{ on }">
+              <!-- see more actions button -->
+              <v-btn small color="primary" v-on="on">
+                See Actions
+              </v-btn>
+            </template>
+
+            <!-- action links -->
+            <v-list>
+              <!-- mark as sold -->
+              <v-list-item v-if="item.sold !== true">
+                <v-list-item-title @click="sell(item)">
+                  <v-icon class="mr-1" color="success">mdi-currency-usd</v-icon>
+                  Mark Sold Unit
+                </v-list-item-title>
+              </v-list-item>
+
+              <!-- unmark as sold -->
+              <v-list-item v-if="item.sold === true">
+                <v-list-item-title @click="unsell(item)">
+                  <v-icon class="mr-1" color="error"
+                    >mdi-currency-usd-off</v-icon
+                  >
+                  Unmark Sold Unit
+                </v-list-item-title>
+              </v-list-item>
+
+              <!-- complete -->
+              <v-list-item>
+                <v-list-item-title @click="complete(item)">
+                  <v-icon class="mr-1" color="success">mdi-check-bold</v-icon>
+                  Complete
+                </v-list-item-title>
+              </v-list-item>
+
+              <!-- delete -->
+              <v-list-item>
+                <v-list-item-title @click="deleteItem(item)">
+                  <v-icon class="mr-1" color="error">mdi-delete</v-icon>
+                  Delete
+                </v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </div>
       </template>
+
+      <!-- sold icon -->
       <template v-slot:item.sold="{ item }">
         <v-img
-          v-if="item.data.sold && item.data.sold === true"
+          v-if="item.sold && item.sold === true"
           src="../assets/sold.png"
           max-height="50px"
           max-width="50px"
         ></v-img
       ></template>
     </v-data-table>
-    <!-- // * Table: End -->
+    <!-- table - end -->
   </v-container>
 </template>
 
@@ -76,37 +104,33 @@ export default {
   data() {
     return {
       detail: [],
-      subletDetail: [],
-      shopDetail: [],
       currentTime: Date.now(),
       state: "started",
-      search: "",
-      details: [],
-      one: null,
-      two: null
+      search: ""
     };
   },
-  computed: {
-    filtered() {
-      let test = [...this.detail, ...this.shopDetail, ...this.subletDetail];
-      return test;
-    }
-  },
   methods: {
+    // delete item
     deleteItem(item) {
-      db.collection("tpo")
-        .doc(item.id)
-        .update({
-          detail: "Deleted",
-          detail_delete_timestamp: Date.now(),
-          detail_delete_associate: firebase.auth().currentUser.displayName
-        });
+      let answer = confirm("Are you sure you want to delete this item?");
+      if (answer) {
+        db.collection("tpo")
+          .doc(item.id)
+          .update({
+            shop: false,
+            sublet_inspection: false,
+            detail: false,
+            sublet: false,
+            detail_delete_timestamp: Date.now(),
+            detail_delete_user: firebase.auth().currentUser.displayName
+          });
+      }
     },
     complete(item) {
       db.collection("tpo")
         .doc(item.id)
         .update({
-          detail: "Complete",
+          detail: false,
           detail_complete_timestamp: Date.now(),
           detail_complete_associate: firebase.auth().currentUser.displayName
         });
@@ -115,8 +139,8 @@ export default {
       db.collection("tpo")
         .doc(i.id)
         .update({
-          detail: "In process",
-          sublet: "In process"
+          detail: false,
+          sublet: true
         });
     },
     numberDays(i) {
@@ -149,38 +173,117 @@ export default {
     },
     elapsedTime(i) {
       let minutes = null;
-      if (i.sublet_complete_timestamp > i.shop_complete_timestamp) {
-        minutes = Math.floor(
-          (this.currentTime - i.sublet_complete_timestamp) / 60000
-        );
+      // if was sent manually to detail
+      if (i.toDetailTimestamp) {
+        minutes = Math.floor((this.currentTime - i.toDetailTimestamp) / 60000);
+        if (minutes >= 1440) {
+          let day = Math.floor(minutes / 1440);
+          if (day === 1) {
+            return `${day} day`;
+          } else {
+            return `${day} days`;
+          }
+        } else if (minutes >= 60) {
+          let hour = Math.floor(minutes / 60);
+          if (hour === 1) {
+            return `${hour} hour`;
+          } else {
+            return `${hour} hours`;
+          }
+        } else if (minutes < 60 && minutes !== 0) {
+          if (minutes === 1) {
+            return `${Math.floor(minutes)} minute`;
+          } else {
+            return `${Math.floor(minutes)} minutes`;
+          }
+        } else if (minutes === 0) {
+          return `A few seconds ago`;
+        }
+      } else if (i.sublet_complete_timestamp && i.shop_complete_timestamp) {
+        // if was sent here from sublet or shop
+        if (i.sublet_complete_timestamp > i.shop_complete_timestamp) {
+          minutes = Math.floor(
+            (this.currentTime - i.sublet_complete_timestamp) / 60000
+          );
+          if (minutes >= 1440) {
+            let day = Math.floor(minutes / 1440);
+            if (day === 1) {
+              return `${day} day`;
+            } else {
+              return `${day} days`;
+            }
+          } else if (minutes >= 60) {
+            let hour = Math.floor(minutes / 60);
+            if (hour === 1) {
+              return `${hour} hour`;
+            } else {
+              return `${hour} hours`;
+            }
+          } else if (minutes < 60 && minutes !== 0) {
+            if (minutes === 1) {
+              return `${Math.floor(minutes)} minute`;
+            } else {
+              return `${Math.floor(minutes)} minutes`;
+            }
+          } else if (minutes === 0) {
+            return `A few seconds ago`;
+          }
+        } else {
+          minutes = Math.floor(
+            (this.currentTime - i.shop_complete_timestamp) / 60000
+          );
+          if (minutes >= 1440) {
+            let day = Math.floor(minutes / 1440);
+            if (day === 1) {
+              return `${day} day`;
+            } else {
+              return `${day} days`;
+            }
+          } else if (minutes >= 60) {
+            let hour = Math.floor(minutes / 60);
+            if (hour === 1) {
+              return `${hour} hour`;
+            } else {
+              return `${hour} hours`;
+            }
+          } else if (minutes < 60 && minutes !== 0) {
+            if (minutes === 1) {
+              return `${Math.floor(minutes)} minute`;
+            } else {
+              return `${Math.floor(minutes)} minutes`;
+            }
+          } else if (minutes === 0) {
+            return `A few seconds ago`;
+          }
+        }
       } else {
+        // if there was no sublet
         minutes = Math.floor(
-          (this.currentTime - i.shop_complete_timestamp) / 60000
+          (this.currentTime - i.sublet_inspection_complete_timestamp) / 60000
         );
-      }
-
-      if (minutes >= 1440) {
-        let day = Math.floor(minutes / 1440);
-        if (day === 1) {
-          return `${day} day`;
-        } else {
-          return `${day} days`;
+        if (minutes >= 1440) {
+          let day = Math.floor(minutes / 1440);
+          if (day === 1) {
+            return `${day} day`;
+          } else {
+            return `${day} days`;
+          }
+        } else if (minutes >= 60) {
+          let hour = Math.floor(minutes / 60);
+          if (hour === 1) {
+            return `${hour} hour`;
+          } else {
+            return `${hour} hours`;
+          }
+        } else if (minutes < 60 && minutes !== 0) {
+          if (minutes === 1) {
+            return `${Math.floor(minutes)} minute`;
+          } else {
+            return `${Math.floor(minutes)} minutes`;
+          }
+        } else if (minutes === 0) {
+          return `A few seconds ago`;
         }
-      } else if (minutes >= 60) {
-        let hour = Math.floor(minutes / 60);
-        if (hour === 1) {
-          return `${hour} hour`;
-        } else {
-          return `${hour} hours`;
-        }
-      } else if (minutes < 60 && minutes !== 0) {
-        if (minutes === 1) {
-          return `${Math.floor(minutes)} minute`;
-        } else {
-          return `${Math.floor(minutes)} minutes`;
-        }
-      } else if (minutes === 0) {
-        return `A few seconds ago`;
       }
     },
     sell(item) {
@@ -217,9 +320,7 @@ export default {
     return {
       detail: db
         .collection("tpo")
-        .where("shop", "==", "Complete")
-        .where("sublet", "==", "Complete")
-        .where("detail", "==", "In process")
+        .where("detail", "==", true)
         .orderBy("sold", "desc")
         .orderBy("initial_timestamp")
     };

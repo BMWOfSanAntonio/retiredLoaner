@@ -47,10 +47,6 @@ export default new Vuex.Store({
         value: "numDays"
       },
       {
-        text: "Elapsed Time in Queue",
-        value: "elapsed"
-      },
-      {
         text: "RO #",
         value: "ro"
       },
@@ -92,8 +88,8 @@ export default new Vuex.Store({
         value: "numDays"
       },
       {
-        text: "Elapsed Time in Queue",
-        value: "elapsed"
+        text: "RO #",
+        value: "ro"
       },
       {
         text: "VIN",
@@ -210,23 +206,23 @@ export default new Vuex.Store({
       },
       {
         text: "VIN",
-        value: "data.vin"
+        value: ".vin"
       },
       {
         text: "Year",
-        value: "data.year"
+        value: ".year"
       },
       {
         text: "Make",
-        value: "data.make"
+        value: ".make"
       },
       {
         text: "Model",
-        value: "data.model"
+        value: ".model"
       },
       {
         text: "Color",
-        value: "data.color"
+        value: ".color"
       },
       {
         text: "Actions",

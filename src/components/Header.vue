@@ -180,12 +180,13 @@ export default {
           type: this.type,
           // * Timestamps
           initial_timestamp: Date.now(),
-          // * Statuses
-          shop: "In process",
-          sublet_inspection: "In process",
-          sublet: "In process",
-          detail: "In process",
+          // States
+          shop: true,
+          sublet_inspection: true,
+          sublet: false,
+          detail: false,
           // * Extras
+          shopToDetail: false,
           repairs: [],
           sold: this.sold,
           ro: this.ro
@@ -199,6 +200,8 @@ export default {
         // * Closes the modal window
         this.dialog = false;
         this.type = null;
+        this.sold = null;
+        this.ro = null;
       } else {
         // * Shows the snackbar if you did not fill out the form completely. Snack bar is located at the bottom on the component.
         this.alert = true;
