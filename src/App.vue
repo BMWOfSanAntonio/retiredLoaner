@@ -1,15 +1,8 @@
 <template>
   <v-app>
-    <v-app-bar app>
-      <v-toolbar-title class="headline text-uppercase">
-        <span>TPO</span>
-        <span class="font-weight-light">Tracker</span>
-      </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn v-if="user" text to="/reports">Reports</v-btn>
-      <v-btn v-if="user" text @click="logout">Logout</v-btn>
-    </v-app-bar>
-
+    <!-- navigation component -->
+    <Navigation :user="user" />
+    <!-- main content -->
     <v-content>
       <router-view :user="user"></router-view>
     </v-content>
@@ -17,19 +10,19 @@
 </template>
 
 <script>
-// * Imports
-import { db } from "./main";
 import firebase from "firebase";
+
+// components
+import Navigation from "./components/layout/Navigation";
+
 export default {
   name: "App",
+  components: {
+    Navigation
+  },
   data: () => ({
+    // current user google data object
     user: firebase.auth().currentUser
-  }),
-  methods: {
-    logout() {
-      firebase.auth().signOut();
-      this.$router.push("/login");
-    }
-  }
+  })
 };
 </script>

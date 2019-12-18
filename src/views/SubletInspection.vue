@@ -1,6 +1,5 @@
 <template>
   <v-container class="sublet-inspection">
-    <Header :user="user" />
     <SubletInspection :user="user" />
     <Sublet :user="user" />
   </v-container>
@@ -12,14 +11,12 @@ import { db } from "../main";
 import firebase from "firebase";
 
 // * Components
-import Header from "@/components/Header";
 import SubletInspection from "@/components/SubletInspection";
 import Sublet from "@/components/Sublet";
 
 export default {
   name: "Shop",
   components: {
-    Header,
     SubletInspection,
     Sublet
   },
@@ -129,5 +126,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

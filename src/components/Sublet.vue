@@ -325,7 +325,10 @@ export default {
         return sublet.vin == item.vin;
       });
       if (progress == 100) {
-        if ((!item.shopToDetail || item.shopToDetail === false) && item.shop_complete_timestamp) {
+        if (
+          (!item.shopToDetail || item.shopToDetail === false) &&
+          item.shop_complete_timestamp
+        ) {
           db.collection("tpo")
             .doc(filterrepair[0].id)
             .update({
@@ -374,9 +377,16 @@ export default {
       }
     },
     elapsedTime(i) {
-      let minutes = Math.floor(
-        (this.currentTime - i.sublet_inspection_complete_timestamp) / 60000
-      );
+      let minutes = 0;
+      if (i.sublet_inspection_complete_timestamp > i.shop_complete_timestamp) {
+        minutes = Math.floor(
+          (this.currentTime - i.sublet_inspection_complete_timestamp) / 60000
+        );
+      } else {
+        minutes = Math.floor(
+          (this.currentTime - i.shop_complete_timestamp) / 60000
+        );
+      }
       if (minutes >= 1440) {
         let day = Math.floor(minutes / 1440);
         if (day === 1) {
@@ -483,6 +493,7 @@ export default {
     return {
       sublet: db
         .collection("tpo")
+        .where("shop", "==", false)
         .where("sublet_inspection", "==", false)
         .where("sublet", "==", true)
         .orderBy("sold", "desc")

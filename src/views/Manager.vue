@@ -1,6 +1,7 @@
 <template>
   <v-container class="manager">
-    <Header :user="user" />
+    <QuickMetrics class="mb-10" :user="user" />
+    <AddVehicle :user="user" />
     <Shop :user="user" />
     <SubletInspection :user="user" />
     <Sublet :user="user" />
@@ -10,25 +11,26 @@
 
 <script>
 // * Components
-import Header from "@/components/Header";
+import QuickMetrics from "@/components/QuickMetrics";
 import Shop from "@/components/Shop";
 import SubletInspection from "@/components/SubletInspection";
 import Sublet from "@/components/Sublet";
 import Detail from "@/components/Detail";
+import AddVehicle from "@/components/AddVehicle";
 
 export default {
   name: "Manager",
   props: ["user"],
   components: {
-    Header,
+    QuickMetrics,
     Shop,
     SubletInspection,
     Sublet,
-    Detail
+    Detail,
+    AddVehicle
   },
   data() {
     return {};
-  },
-  methods: {}
+  }
 };
 </script>
