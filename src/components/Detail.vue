@@ -171,118 +171,62 @@ export default {
         return `A few seconds ago`;
       }
     },
+    timeLogic(minutes) {
+      if (minutes >= 1440) {
+        let day = Math.floor(minutes / 1440);
+        if (day === 1) {
+          return `${day} day`;
+        } else {
+          return `${day} days`;
+        }
+      } else if (minutes >= 60) {
+        let hour = Math.floor(minutes / 60);
+        if (hour === 1) {
+          return `${hour} hour`;
+        } else {
+          return `${hour} hours`;
+        }
+      } else if (minutes < 60 && minutes !== 0) {
+        if (minutes === 1) {
+          return `${Math.floor(minutes)} minute`;
+        } else {
+          return `${Math.floor(minutes)} minutes`;
+        }
+      } else if (minutes === 0) {
+        return `A few seconds ago`;
+      }
+    },
     elapsedTime(i) {
+      // if was manually sent to detail or not
+      // If there was no sublet - sublet inspection timestamp
+      // if there was sublet - max(shop complete or sublet inspection complete)
       let minutes = null;
       // if was sent manually to detail
       if (i.toDetailTimestamp) {
         minutes = Math.floor((this.currentTime - i.toDetailTimestamp) / 60000);
-        if (minutes >= 1440) {
-          let day = Math.floor(minutes / 1440);
-          if (day === 1) {
-            return `${day} day`;
-          } else {
-            return `${day} days`;
-          }
-        } else if (minutes >= 60) {
-          let hour = Math.floor(minutes / 60);
-          if (hour === 1) {
-            return `${hour} hour`;
-          } else {
-            return `${hour} hours`;
-          }
-        } else if (minutes < 60 && minutes !== 0) {
-          if (minutes === 1) {
-            return `${Math.floor(minutes)} minute`;
-          } else {
-            return `${Math.floor(minutes)} minutes`;
-          }
-        } else if (minutes === 0) {
-          return `A few seconds ago`;
-        }
-      } else if (i.sublet_complete_timestamp && i.shop_complete_timestamp) {
-        // if was sent here from sublet or shop
-        if (i.sublet_complete_timestamp > i.shop_complete_timestamp) {
-          minutes = Math.floor(
+        return this.timeLogic(minutes);
+      } else if (i.sublet_complete_timestamp) {
+         minutes = Math.floor(
             (this.currentTime - i.sublet_complete_timestamp) / 60000
           );
-          if (minutes >= 1440) {
-            let day = Math.floor(minutes / 1440);
-            if (day === 1) {
-              return `${day} day`;
-            } else {
-              return `${day} days`;
-            }
-          } else if (minutes >= 60) {
-            let hour = Math.floor(minutes / 60);
-            if (hour === 1) {
-              return `${hour} hour`;
-            } else {
-              return `${hour} hours`;
-            }
-          } else if (minutes < 60 && minutes !== 0) {
-            if (minutes === 1) {
-              return `${Math.floor(minutes)} minute`;
-            } else {
-              return `${Math.floor(minutes)} minutes`;
-            }
-          } else if (minutes === 0) {
-            return `A few seconds ago`;
-          }
+          return this.timeLogic(minutes);
+      }else if (
+        i.sublet_inspection_complete_timestamp &&
+        i.shop_complete_timestamp
+      ) {
+        // if was sent here from sublet or shop
+        if (
+          i.sublet_inspection_complete_timestamp > i.shop_complete_timestamp
+        ) {
+          minutes = Math.floor(
+            (this.currentTime - i.sublet_inspection_complete_timestamp) / 60000
+          );
+          return this.timeLogic(minutes);
         } else {
           minutes = Math.floor(
             (this.currentTime - i.shop_complete_timestamp) / 60000
           );
-          if (minutes >= 1440) {
-            let day = Math.floor(minutes / 1440);
-            if (day === 1) {
-              return `${day} day`;
-            } else {
-              return `${day} days`;
-            }
-          } else if (minutes >= 60) {
-            let hour = Math.floor(minutes / 60);
-            if (hour === 1) {
-              return `${hour} hour`;
-            } else {
-              return `${hour} hours`;
-            }
-          } else if (minutes < 60 && minutes !== 0) {
-            if (minutes === 1) {
-              return `${Math.floor(minutes)} minute`;
-            } else {
-              return `${Math.floor(minutes)} minutes`;
-            }
-          } else if (minutes === 0) {
-            return `A few seconds ago`;
-          }
-        }
-      } else {
-        // if there was no sublet
-        minutes = Math.floor(
-          (this.currentTime - i.sublet_inspection_complete_timestamp) / 60000
-        );
-        if (minutes >= 1440) {
-          let day = Math.floor(minutes / 1440);
-          if (day === 1) {
-            return `${day} day`;
-          } else {
-            return `${day} days`;
-          }
-        } else if (minutes >= 60) {
-          let hour = Math.floor(minutes / 60);
-          if (hour === 1) {
-            return `${hour} hour`;
-          } else {
-            return `${hour} hours`;
-          }
-        } else if (minutes < 60 && minutes !== 0) {
-          if (minutes === 1) {
-            return `${Math.floor(minutes)} minute`;
-          } else {
-            return `${Math.floor(minutes)} minutes`;
-          }
-        } else if (minutes === 0) {
-          return `A few seconds ago`;
+          return this.timeLogic(minutes);
         }
       }
     },

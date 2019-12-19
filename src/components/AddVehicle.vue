@@ -137,12 +137,35 @@ export default {
       //   * Dialog
       dialog: false,
       // * Database pullins
-      tpo: []
+      tpo: [],
+      shop: [],
+      subletInspection: [],
+      sublet: [],
+      detail: [],
+      inProcess: []
     };
   },
+  mounted() {},
   methods: {
+    mergeInProcess() {
+      let combineAll = this.shop.concat(
+        this.detail,
+        this.subletInspection,
+        this.sublet
+      );
+      let allNoDuplicates = Array.from(new Set(combineAll.map(a => a.id))).map(
+        id => {
+          return combineAll.find(a => a.id === id);
+        }
+      );
+      this.inProcess = allNoDuplicates;
+    },
     // * Adding a car to the database
     addCar() {
+      this.mergeInProcess();
+      let filtered = this.inProcess.filter(item => {
+        return this.vin == item.vin;
+      });
       // Only when the entire form is filled out can the form be submitted
       if (
         this.vin !== null &&
@@ -154,43 +177,57 @@ export default {
         this.ro !== null &&
         this.type !== null
       ) {
-        db.collection("tpo").add({
-          // * Form Values
-          vin: this.vin,
-          year: this.year,
-          make: this.make,
-          model: this.model,
-          color: this.color,
-          type: this.type,
-          // * Timestamps
-          initial_timestamp: Date.now(),
-          // States
-          shop: true,
-          sublet_inspection: true,
-          sublet: false,
-          detail: false,
-          // * Extras
-          shopToDetail: false,
-          repairs: [],
-          sold: this.sold,
-          ro: this.ro
-        });
-        // Resetting the values to null
-        this.vin = null;
-        this.year = null;
-        this.make = null;
-        this.model = null;
-        this.color = null;
-        // * Closes the modal window
-        this.dialog = false;
-        this.type = null;
-        this.sold = null;
-        this.ro = null;
+        if (filtered.length > 0) {
+          alert("This VIN is already in the system...");
+        } else {
+          db.collection("tpo").add({
+            // * Form Values
+            vin: this.vin,
+            year: this.year,
+            make: this.make,
+            model: this.model,
+            color: this.color,
+            type: this.type,
+            // * Timestamps
+            initial_timestamp: Date.now(),
+            // States
+            shop: true,
+            sublet_inspection: true,
+            sublet: false,
+            detail: false,
+            // * Extras
+            shopToDetail: false,
+            repairs: [],
+            sold: this.sold,
+            ro: this.ro
+          });
+          // Resetting the values to null
+          this.vin = null;
+          this.year = null;
+          this.make = null;
+          this.model = null;
+          this.color = null;
+          // * Closes the modal window
+          this.dialog = false;
+          this.type = null;
+          this.sold = null;
+          this.ro = null;
+        }
       } else {
         // * Shows the snackbar if you did not fill out the form completely. Snack bar is located at the bottom on the component.
         this.$store.state.alert = true;
       }
     }
+  },
+  firestore() {
+    return {
+      shop: db.collection("tpo").where("shop", "==", true),
+      subletInspection: db
+        .collection("tpo")
+        .where("sublet_inspection", "==", true),
+      sublet: db.collection("tpo").where("sublet", "==", true),
+      detail: db.collection("tpo").where("detail", "==", true)
+    };
   }
 };
 </script>

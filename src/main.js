@@ -17,13 +17,13 @@ Vue.use(firestorePlugin);
 // * Initialize Firebase
 // * Setting database config
 const config = {
-  apiKey: "AIzaSyBzBeNpGg4hANEkpxw25Z-8FF_r3QJr2gg",
-  authDomain: "testtest-6350a.firebaseapp.com",
-  databaseURL: "https://testtest-6350a.firebaseio.com",
-  projectId: "testtest-6350a",
-  storageBucket: "testtest-6350a.appspot.com",
-  messagingSenderId: "560921073477",
-  appId: "1:560921073477:web:a2f6f65988188c3c66902c"
+  apiKey: "AIzaSyDLiWuwmqt0LUt96DQH1D6vacBBBObQkAI",
+  authDomain: "keytracker-e176b.firebaseapp.com",
+  databaseURL: "https://keytracker-e176b.firebaseio.com",
+  projectId: "keytracker-e176b",
+  storageBucket: "keytracker-e176b.appspot.com",
+  messagingSenderId: "1084196062284",
+  appId: "1:1084196062284:web:5d81b521c622eb31"
 };
 
 // * Initalizing Firebase

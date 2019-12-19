@@ -255,20 +255,22 @@ export default {
         // send to detail
         if (item.toDetailTimestamp) {
           age = age + item.toDetailTimestamp;
+        } else if (item.sublet_complete_timestamp) {
+          age = age + item.sublet_complete_timestamp;
         } else if (
-          item.sublet_complete_timestamp &&
+          item.sublet_inspection_complete_timestamp &&
           item.shop_complete_timestamp
         ) {
           // sublet took longer to complete work
-          if (item.sublet_complete_timestamp > item.shop_complete_timestamp) {
-            age = age + item.sublet_complete_timestamp;
+          if (
+            item.sublet_inspection_complete_timestamp >
+            item.shop_complete_timestamp
+          ) {
+            age = age + item.sublet_inspection_complete_timestamp;
             // shop took longer to complete work
           } else {
             age = age + item.shop_complete_timestamp;
           }
-        } else {
-          // no sublet to perform
-          age = age + item.sublet_inspection_complete_timestamp;
         }
       });
       let difference = age / this.detail.length;

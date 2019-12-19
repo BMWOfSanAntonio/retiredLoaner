@@ -105,12 +105,20 @@ export default {
       year: null,
       make: null,
       model: null,
-      color: null
+      color: null,
+      shop: [],
+      subletInspection: [],
+      sublet: [],
+      detail: []
     };
   },
   methods: {
     // * Adding a car to the database
     addCar() {
+      let filtered = this.shop.filter(item => {
+        return this.vin === item.vin;
+      });
+      console.log(filtered);
       // Only when the entire form is filled out can the form be submitted
       if (
         this.vin !== null &&
@@ -119,38 +127,50 @@ export default {
         this.model !== null &&
         this.color !== null
       ) {
-        db.collection("tpo").add({
-          // * Form Values
-          vin: this.vin,
-          year: this.year,
-          make: this.make,
-          model: this.model,
-          color: this.color,
-          // * Timestamps
-          initial_timestamp: Date.now(),
-          // * Statuses
-          shop: "In process",
-          sublet_inspection: "In process",
-          sublet: "In process",
-          detail: "In process",
-          // * Extras
-          repairs: []
-        });
-        // Resetting the values to null
-        this.vin = null;
-        this.year = null;
-        this.make = null;
-        this.model = null;
-        this.color = null;
-        // * Start Alert
-        this.alert1 = true;
+        if (filtered.length > 0) {
+          console.log("already in the system you idiot");
+        } else {
+          db.collection("tpo").add({
+            // * Form Values
+            vin: this.vin,
+            year: this.year,
+            make: this.make,
+            model: this.model,
+            color: this.color,
+            // * Timestamps
+            initial_timestamp: Date.now(),
+            // * Statuses
+            shop: "In process",
+            sublet_inspection: "In process",
+            sublet: "In process",
+            detail: "In process",
+            // * Extras
+            repairs: []
+          });
+          // Resetting the values to null
+          this.vin = null;
+          this.year = null;
+          this.make = null;
+          this.model = null;
+          this.color = null;
+          // * Start Alert
+          this.alert1 = true;
+        }
       } else {
         // * Shows the snackbar if you did not fill out the form completely. Snack bar is located at the bottom on the component.
         this.alert = true;
       }
     }
+  },
+  firestore() {
+    return {
+      shop: db.collection("tpo").where("shop", "==", true),
+      subletInspection: db
+        .collection("tpo")
+        .where("sublet_inspection", "==", true),
+      sublet: db.collection("tpo").where("sublet", "==", true),
+      detail: db.collection("tpo").where("detail", "==", true)
+    };
   }
 };
 </script>
-
- 

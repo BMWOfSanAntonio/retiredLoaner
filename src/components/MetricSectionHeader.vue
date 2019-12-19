@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center display-1 text-primary mb-5">{{ title }}</div>
+  <div class="text-center display-1 mb-5">{{ title }}</div>
 </template>
 <script>
 export default {
@@ -10,3 +10,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+div {
+  text-decoration: underline !important;
+}
+</style>

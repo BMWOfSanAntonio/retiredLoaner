@@ -6,9 +6,8 @@
           <v-card-text>
             <div class="display-1">
               <MetricSectionHeader title="In Process" />
-              <!-- metrics -->
-              <v-row class="mt-2">
-                <!-- total in process -->
+              <!-- testing area -->
+              <v-row align="center">
                 <v-col cols="4">
                   <LargeTotal
                     center="text-center"
@@ -17,136 +16,131 @@
                   />
                 </v-col>
                 <v-divider class="mx-4" inset vertical></v-divider>
-                <v-col>
+                <v-col cols="6">
+                  <v-col cols="12">
+                    <MetricTitle title="Break Down" />
+                  </v-col>
+                  <v-row>
+                    <v-col cols="6">
+                      <MetricLabelPercentage
+                        title="Shop"
+                        :calculation="numShop"
+                        :percentage="
+                          Math.floor((numShop / numInProcess) * 100) + '%'
+                        "
+                      />
+                      <MetricLabelPercentage
+                        title="Sublet Inspection"
+                        :calculation="numSubletInspection"
+                        :percentage="
+                          Math.floor(
+                            (numSubletInspection / numInProcess) * 100
+                          ) + '%'
+                        "
+                      />
+                      <MetricLabelPercentage
+                        title="Sublet"
+                        :calculation="numSubletQueue"
+                        :percentage="
+                          Math.floor((numSubletQueue / numInProcess) * 100) +
+                            '%'
+                        "
+                      />
+                      <MetricLabelPercentage
+                        title="Detail"
+                        :calculation="numDetail"
+                        :percentage="
+                          Math.floor((numDetail / numInProcess) * 100) + '%'
+                        "
+                      />
+                    </v-col>
+                    <v-col cols="6">
+                      <MetricLabelPercentage
+                        title="Total Needing Shop"
+                        :calculation="numShop"
+                        :percentage="
+                          Math.floor((numShop / numInProcess) * 100) + '%'
+                        "
+                      />
+                      <MetricLabelPercentage
+                        title="Total Needing Sublet"
+                        :calculation="numSublet"
+                        :percentage="
+                          Math.floor((numSublet / numInProcess) * 100) + '%'
+                        "
+                      />
+                    </v-col>
+                  </v-row>
+                </v-col>
+              </v-row>
+              <v-divider class="mx-4"></v-divider>
+              <v-row class="mt-2">
+                <v-col cols="4">
                   <LargeTotal
                     center="text-center"
                     :largeCalc="averageAgeInProcess"
-                    largeTitle="Avg. Age (d)"
+                    largeTitle="Avg. Age (days)"
                   />
                 </v-col>
                 <v-divider class="mx-4" inset vertical></v-divider>
                 <v-col>
-                  <LargeTotalArrow
-                    :percentage="percentage"
-                    :arrow="arrow"
-                    :center="color"
-                    :largeCalc="averageCycleTime"
-                    largeTitle="Avg. Cycle Time 30d"
-                  />
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="12">
-                  <MetricTitle title="In Process Break Down" />
-                </v-col>
-
-                <v-col cols="6">
-                  <MetricLabelPercentage
-                    title="Shop"
-                    :calculation="numShop"
-                    :percentage="
-                      Math.floor((numShop / numInProcess) * 100) + '%'
-                    "
-                  />
-                  <MetricLabelPercentage
-                    title="Sublet Inspection"
-                    :calculation="numSubletInspection"
-                    :percentage="
-                      Math.floor((numSubletInspection / numInProcess) * 100) +
-                        '%'
-                    "
-                  />
-                  <MetricLabelPercentage
-                    title="Sublet"
-                    :calculation="numSubletQueue"
-                    :percentage="
-                      Math.floor((numSubletQueue / numInProcess) * 100) + '%'
-                    "
-                  />
-                  <MetricLabelPercentage
-                    title="Detail"
-                    :calculation="numDetail"
-                    :percentage="
-                      Math.floor((numDetail / numInProcess) * 100) + '%'
-                    "
-                  />
-                </v-col>
-                <v-col cols="6">
-                  <MetricLabelPercentage
-                    title="Total Needing Shop"
-                    :calculation="numShop"
-                    :percentage="
-                      Math.floor((numShop / numInProcess) * 100) + '%'
-                    "
-                  />
-                  <MetricLabelPercentage
-                    title="Total Needing Sublet"
-                    :calculation="numSublet"
-                    :percentage="
-                      Math.floor((numSublet / numInProcess) * 100) + '%'
-                    "
-                  />
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="12">
-                  <MetricTitle title="Age Buckets" />
-                </v-col>
-                <v-col>
-                  <MetricLabelPercentage
-                    title="0-15 Days"
-                    :calculation="numZeroFifteen"
-                    :percentage="
-                      Math.floor((numZeroFifteen / numInProcess) * 100) + '%'
-                    "
-                  />
-                </v-col>
-                <v-col>
-                  <MetricLabelPercentage
-                    title="16-30 Days"
-                    :calculation="numSixteenThirty"
-                    :percentage="
-                      Math.floor((numSixteenThirty / numInProcess) * 100) + '%'
-                    "
-                  />
-                </v-col>
-                <v-col>
-                  <MetricLabelPercentage
-                    title="31+ Days"
-                    :calculation="numThirtyOne"
-                    :percentage="
-                      Math.floor((numThirtyOne / numInProcess) * 100) + '%'
-                    "
-                  />
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="12">
-                  <MetricTitle title="Average Queue Times" />
-                </v-col>
-                <v-col>
-                  <MetricLabel
-                    title="In Shop"
-                    :calculation="averageAgeInShop"
-                    alternativeMessage="No requests"
-                  />
-                  <MetricLabel
-                    title="In Sublet Inspection"
-                    :calculation="averageAgeInSubletInspection"
-                    alternativeMessage="No requests"
-                  />
-                </v-col>
-                <v-col>
-                  <MetricLabel
-                    title="In Sublet"
-                    :calculation="averageAgeInSublet"
-                    alternativeMessage="No requests"
-                  />
-                  <MetricLabel
-                    title="In Detail"
-                    :calculation="averageAgeInDetail"
-                    alternativeMessage="No requests"
-                  />
+                  <v-row>
+                    <v-col cols="6">
+                      <MetricTitle title="Age Buckets" />
+                    </v-col>
+                    <v-col cols="6">
+                      <MetricTitle title="Average Queue Times" />
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="6">
+                      <MetricLabelPercentage
+                        title="0-15 Days"
+                        :calculation="numZeroFifteen"
+                        :percentage="
+                          Math.floor((numZeroFifteen / numInProcess) * 100) +
+                            '%'
+                        "
+                      />
+                      <MetricLabelPercentage
+                        title="16-30 Days"
+                        :calculation="numSixteenThirty"
+                        :percentage="
+                          Math.floor((numSixteenThirty / numInProcess) * 100) +
+                            '%'
+                        "
+                      />
+                      <MetricLabelPercentage
+                        title="31+ Days"
+                        :calculation="numThirtyOne"
+                        :percentage="
+                          Math.floor((numThirtyOne / numInProcess) * 100) + '%'
+                        "
+                      />
+                    </v-col>
+                    <v-col cols="6">
+                      <MetricLabel
+                        title="In Shop"
+                        :calculation="averageAgeInShop"
+                        alternativeMessage="No requests"
+                      />
+                      <MetricLabel
+                        title="In Sublet Inspection"
+                        :calculation="averageAgeInSubletInspection"
+                        alternativeMessage="No requests"
+                      />
+                      <MetricLabel
+                        title="In Sublet"
+                        :calculation="averageAgeInSublet"
+                        alternativeMessage="No requests"
+                      />
+                      <MetricLabel
+                        title="In Detail"
+                        :calculation="averageAgeInDetail"
+                        alternativeMessage="No requests"
+                      />
+                    </v-col>
+                  </v-row>
                 </v-col>
               </v-row>
             </div>
@@ -154,9 +148,11 @@
         </v-card>
         <v-card class="mt-2">
           <v-card-text>
-            <MetricSectionHeader title="Completed" />
-            <v-row justify="center" align="center">
-              <v-col cols="5">
+            <v-row align="center">
+              <v-col cols="12">
+                <MetricSectionHeader title="Completed" />
+              </v-col>
+              <v-col cols="4">
                 <LargeTotalArrow
                   :percentage="percentage"
                   :arrow="arrow"
@@ -164,6 +160,9 @@
                   :largeCalc="averageCycleTime"
                   largeTitle="Avg. Cycle Time 30d"
                 />
+              </v-col>
+              <v-divider class="mx-4" inset vertical></v-divider>
+              <v-col cols="4">
                 <MetricLabel
                   title="Num. Vehicles Complete"
                   :calculation="lastThirty.length"
@@ -176,6 +175,8 @@
                   title="Sublet Inspection Cycle Time"
                   :calculation="subletInspectionCycle30"
                 />
+              </v-col>
+              <v-col cols="3">
                 <MetricLabel
                   title="Sublet Cycle Time"
                   :calculation="subletCycle30"
@@ -185,49 +186,49 @@
                   :calculation="detailCycle30"
                 />
               </v-col>
-              <v-divider class="mx-4" inset vertical></v-divider>
-              <v-col cols="5">
-                <LargeTotal
-                  largeTitle="Avg. Cycle Time 90d"
-                  :largeCalc="averageCycleTime90"
-                />
-                <MetricLabel
-                  title="Num. Vehicles Complete"
-                  :calculation="lastNinety.length"
-                />
-                <MetricLabel
-                  title="Shop Cycle Time"
-                  :calculation="shopCycle90"
-                />
-                <MetricLabel
-                  title="Sublet Inspection Cycle Time"
-                  :calculation="subletInspectionCycle90"
-                />
-                <MetricLabel
-                  title="Sublet Cycle Time"
-                  :calculation="subletCycle90"
-                />
-                <MetricLabel
-                  title="Detail Cycle Time"
-                  :calculation="detailCycle90"
-                />
-              </v-col>
+            </v-row>
+            <v-divider class="mx-4"></v-divider>
+            <v-row>
+              <v-row align="center">
+                <v-col cols="4">
+                  <LargeTotal
+                    largeTitle="Avg. Cycle Time 90d"
+                    :largeCalc="averageCycleTime90"
+                  />
+                </v-col>
+                <v-divider class="mx-4" inset vertical></v-divider>
+                <v-col cols="4">
+                  <MetricLabel
+                    title="Num. Vehicles Complete"
+                    :calculation="lastNinety.length"
+                  />
+                  <MetricLabel
+                    title="Shop Cycle Time"
+                    :calculation="shopCycle90"
+                  />
+                  <MetricLabel
+                    title="Sublet Inspection Cycle Time"
+                    :calculation="subletInspectionCycle90"
+                  /> </v-col
+                ><v-col cols="3">
+                  <MetricLabel
+                    title="Sublet Cycle Time"
+                    :calculation="subletCycle90"
+                  />
+                  <MetricLabel
+                    title="Detail Cycle Time"
+                    :calculation="detailCycle90"
+                  />
+                </v-col>
+              </v-row>
             </v-row>
           </v-card-text>
         </v-card>
       </v-col>
       <v-col>
         <v-card>
-          <v-card-title>
-            Oldest 20 Vehicles
-            <v-spacer></v-spacer>
-            <v-text-field
-              v-model="search"
-              append-icon=""
-              label="Search"
-              single-line
-              hide-details
-            ></v-text-field>
+          <v-card-title class="text">
+            <MetricSectionHeader title="Oldest 20 Vehicles" />
           </v-card-title>
           <v-data-table
             :headers="headers"
@@ -277,12 +278,26 @@
               <!-- Sublet in process -->
               <div
                 v-else-if="
-                  item.sublet_inspection_complete_timestamp &&
-                    item.sublet === true
+                  item.shop_complete_timestamp &&
+                    item.sublet === true &&
+                    item.sublet_inspection_complete_timestamp
                 "
               >
                 <Chip
                   color="warning"
+                  :calculation="
+                    subletStatusFormat(item.sublet_complete_timestamp, item)
+                  "
+                />
+              </div>
+              <div
+                v-else-if="
+                  !item.shop_complete_timestamp &&
+                    item.sublet_inspection_complete_timestamp
+                "
+              >
+                <Chip
+                  color="error"
                   :calculation="
                     subletStatusFormat(item.sublet_complete_timestamp, item)
                   "
@@ -351,6 +366,7 @@ import LargeTotal from "../components/LargeTotal";
 import LargeTotalArrow from "../components/LargeTotalArrow";
 import Chip from "../components/Chip";
 import { async } from "q";
+import { setInterval } from "timers";
 export default {
   name: "Reports",
   components: {
@@ -532,20 +548,22 @@ export default {
         // send to detail
         if (item.toDetailTimestamp) {
           age = age + item.toDetailTimestamp;
+        } else if (item.sublet_complete_timestamp) {
+          age = age + item.sublet_complete_timestamp;
         } else if (
-          item.sublet_complete_timestamp &&
+          item.sublet_inspection_complete_timestamp &&
           item.shop_complete_timestamp
         ) {
           // sublet took longer to complete work
-          if (item.sublet_complete_timestamp > item.shop_complete_timestamp) {
-            age = age + item.sublet_complete_timestamp;
+          if (
+            item.sublet_inspection_complete_timestamp >
+            item.shop_complete_timestamp
+          ) {
+            age = age + item.sublet_inspection_complete_timestamp;
             // shop took longer to complete work
           } else {
             age = age + item.shop_complete_timestamp;
           }
-        } else {
-          // no sublet to perform
-          age = age + item.sublet_inspection_complete_timestamp;
         }
       });
       let difference = age / this.detail.length;
@@ -697,7 +715,7 @@ export default {
       let minutes = avgAge / 60000;
       let days = minutes / 1440;
 
-      return `${Math.floor(days)}`;
+      return `${Math.floor(days)} days`;
     },
     subletInspectionCycle30() {
       let age = 0;
@@ -710,7 +728,7 @@ export default {
       let minutes = avgAge / 60000;
       let days = minutes / 1440;
 
-      return `${Math.floor(days)}`;
+      return `${Math.floor(days)} days`;
     },
     subletCycle30() {
       let age = 0;
@@ -733,7 +751,7 @@ export default {
         let avgAge = age / filtered.length;
         let minutes = avgAge / 60000;
         let days = minutes / 1440;
-        return `${Math.floor(days)}`;
+        return `${Math.floor(days)} days`;
       } else {
         return "No request have gone through sublet";
       }
@@ -761,7 +779,7 @@ export default {
       let avgAge = age / this.lastThirty.length;
       let minutes = avgAge / 60000;
       let days = minutes / 1440;
-      return `${Math.floor(days)}`;
+      return `${Math.floor(days)} days`;
     },
     shopCycle90() {
       let age = 0;
@@ -773,7 +791,7 @@ export default {
       let minutes = avgAge / 60000;
       let days = minutes / 1440;
 
-      return `${Math.floor(days)}`;
+      return `${Math.floor(days)} days`;
     },
     subletInspectionCycle90() {
       let age = 0;
@@ -786,7 +804,7 @@ export default {
       let minutes = avgAge / 60000;
       let days = minutes / 1440;
 
-      return `${Math.floor(days)}`;
+      return `${Math.floor(days)} days`;
     },
     subletCycle90() {
       let age = 0;
@@ -809,7 +827,7 @@ export default {
         let avgAge = age / filtered.length;
         let minutes = avgAge / 60000;
         let days = minutes / 1440;
-        return `${Math.floor(days)}`;
+        return `${Math.floor(days)} days`;
       } else {
         return "No request have gone through sublet";
       }
@@ -837,7 +855,7 @@ export default {
       let avgAge = age / this.lastNinety.length;
       let minutes = avgAge / 60000;
       let days = minutes / 1440;
-      return `${Math.floor(days)}`;
+      return `${Math.floor(days)} days`;
     },
     color() {
       if (this.averageCycleTime > this.averageCycleTime90) {
@@ -863,15 +881,20 @@ export default {
           return "Inspection not performed";
         } else if (
           i.sublet_inspection_complete_timestamp &&
+          i.shop_complete_timestamp &&
           i.sublet === true
         ) {
           return "In process";
+        } else if (
+          i.sublet_inspection_complete_timestamp &&
+          !i.shop_complete_timestamp
+        ) {
+          return "Waiting on process";
         } else if (!mili) {
           return "No sublet";
         } else {
           return new Date(mili).toLocaleDateString();
         }
-      } else {
       }
     },
     dateFormat(mili, i) {
@@ -1024,7 +1047,7 @@ export default {
 </script>
 
 <style scoped>
-#inprocesschart {
+#chart {
   max-width: 500px;
 }
 .vl {
@@ -1036,5 +1059,8 @@ export default {
 }
 .bad {
   color: red;
+}
+.text {
+  color: rgba(0, 0, 0, 0.54);
 }
 </style>
