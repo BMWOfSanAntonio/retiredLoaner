@@ -5,6 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    fullscreenDialog: false,
     alert: false,
     type: ["CPO", "Non-CPO", "Value Direct"],
     // * Lists
