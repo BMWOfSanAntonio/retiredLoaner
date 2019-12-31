@@ -199,7 +199,8 @@ export default {
             shopToDetail: false,
             repairs: [],
             sold: this.sold,
-            ro: this.ro
+            ro: this.ro,
+            createdBy: firebase.auth().currentUser.displayName
           });
           // Resetting the values to null
           this.vin = null;

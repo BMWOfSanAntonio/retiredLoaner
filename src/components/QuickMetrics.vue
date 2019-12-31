@@ -9,7 +9,7 @@
               <v-icon large color="yellow">mdi-flash</v-icon> Quick Metrics
             </div>
           </v-col>
-          <v-col class="ml-10">
+          <v-col cols="2">
             <!-- user avatar -->
             <v-avatar class="mr-2">
               <img :src="user.photoURL" alt="Principle Auto Employee" />
@@ -121,6 +121,54 @@
             />
           </v-col>
         </v-row>
+        <v-row>
+          <transition name="slide-fade">
+            <v-col v-if="slider" cols="12">
+              <v-data-table
+                :headers="header"
+                :items="inProcess"
+                :search="search"
+              >
+                <template v-slot:top>
+                  <v-row>
+                    <v-card-title class="display-2 font-weight-light">
+                      In Process
+                    </v-card-title>
+                    <v-spacer></v-spacer>
+                    <v-col cols="3">
+                      <v-text-field
+                        v-model="search"
+                        append-icon="mdi-magnify"
+                        label="Search"
+                        single-line
+                        hide-details
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </template>
+                <template v-slot:item.age="{ item }">
+                  {{ numberDays(item) }}
+                </template>
+                <template v-slot:item.actions="{ item }">
+                  <FullScreenDialog :item="item" />
+                </template>
+              </v-data-table>
+            </v-col>
+          </transition>
+          <v-col class="text-center">
+            <v-btn
+              v-if="slider === false"
+              @click="slider = !slider"
+              text
+              small
+              color="info"
+              >See All in Process</v-btn
+            >
+            <v-btn v-else @click="slider = !slider" text small color="info"
+              >Close</v-btn
+            >
+          </v-col>
+        </v-row>
       </v-container>
     </v-card>
   </v-container>
@@ -137,6 +185,7 @@ import MetricTitle from "./MetricTitle";
 import MetricLabel from "./MetricLabel";
 import MetricLabelPercentage from "./MetricLabelPercentage";
 import MetricFocusWithSubData from "./MetricFocusWithSubData";
+import FullScreenDialog from "./FullScreenDialog";
 
 export default {
   name: "QuickMetrics",
@@ -146,7 +195,8 @@ export default {
     MetricTitle,
     MetricLabel,
     MetricLabelPercentage,
-    MetricFocusWithSubData
+    MetricFocusWithSubData,
+    FullScreenDialog
   },
   data() {
     return {
@@ -158,7 +208,43 @@ export default {
       inProcess: null,
       zeroFifteen: null,
       sixteenThirty: null,
-      thirtyOne: null
+      thirtyOne: null,
+      slider: false,
+      search: "",
+      header: [
+        {
+          text: "Age",
+          value: "age"
+        },
+        {
+          text: "RO #",
+          value: "ro"
+        },
+        {
+          text: "VIN",
+          value: "vin"
+        },
+        {
+          text: "Year",
+          value: "year"
+        },
+        {
+          text: "Make",
+          value: "make"
+        },
+        {
+          text: "Model",
+          value: "model"
+        },
+        {
+          text: "Color",
+          value: "color"
+        },
+        {
+          text: "Actions",
+          value: "actions"
+        }
+      ]
     };
   },
   computed: {
@@ -281,6 +367,32 @@ export default {
     }
   },
   methods: {
+    numberDays(i) {
+      let minutes = Math.floor((Date.now() - i.initial_timestamp) / 60000);
+      if (minutes >= 1440) {
+        let day = Math.floor(minutes / 1440);
+        if (day === 1) {
+          return `${day} day`;
+        } else {
+          return `${day} days`;
+        }
+      } else if (minutes >= 60) {
+        let hour = Math.floor(minutes / 60);
+        if (hour === 1) {
+          return `${hour} hour`;
+        } else {
+          return `${hour} hours`;
+        }
+      } else if (minutes < 60 && minutes !== 0) {
+        if (minutes === 1) {
+          return `${Math.floor(minutes)} minute`;
+        } else {
+          return `${Math.floor(minutes)} minutes`;
+        }
+      } else if (minutes === 0) {
+        return `A few seconds ago`;
+      }
+    },
     mergeInProcess() {
       let combineAll = this.shop.concat(
         this.detail,
@@ -293,6 +405,7 @@ export default {
         }
       );
       this.inProcess = allNoDuplicates;
+      this.inProcess.sort((a, b) => a.initial_timestamp - b.initial_timestamp);
     },
     calculateAgeZeroFifteen() {
       let now = Date.now();

@@ -1,353 +1,33 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col cols="6">
-        <v-card>
-          <v-card-text>
-            <div class="display-1">
-              <MetricSectionHeader title="In Process" />
-              <!-- testing area -->
-              <v-row align="center">
-                <v-col cols="4">
-                  <LargeTotal
-                    center="text-center"
-                    :largeCalc="numInProcess"
-                    largeTitle="Total in Process"
-                  />
-                </v-col>
-                <v-divider class="mx-4" inset vertical></v-divider>
-                <v-col cols="6">
-                  <v-col cols="12">
-                    <MetricTitle title="Break Down" />
-                  </v-col>
-                  <v-row>
-                    <v-col cols="6">
-                      <MetricLabelPercentage
-                        title="Shop"
-                        :calculation="numShop"
-                        :percentage="
-                          Math.floor((numShop / numInProcess) * 100) + '%'
-                        "
-                      />
-                      <MetricLabelPercentage
-                        title="Sublet Inspection"
-                        :calculation="numSubletInspection"
-                        :percentage="
-                          Math.floor(
-                            (numSubletInspection / numInProcess) * 100
-                          ) + '%'
-                        "
-                      />
-                      <MetricLabelPercentage
-                        title="Sublet"
-                        :calculation="numSubletQueue"
-                        :percentage="
-                          Math.floor((numSubletQueue / numInProcess) * 100) +
-                            '%'
-                        "
-                      />
-                      <MetricLabelPercentage
-                        title="Detail"
-                        :calculation="numDetail"
-                        :percentage="
-                          Math.floor((numDetail / numInProcess) * 100) + '%'
-                        "
-                      />
-                    </v-col>
-                    <v-col cols="6">
-                      <MetricLabelPercentage
-                        title="Total Needing Shop"
-                        :calculation="numShop"
-                        :percentage="
-                          Math.floor((numShop / numInProcess) * 100) + '%'
-                        "
-                      />
-                      <MetricLabelPercentage
-                        title="Total Needing Sublet"
-                        :calculation="numSublet"
-                        :percentage="
-                          Math.floor((numSublet / numInProcess) * 100) + '%'
-                        "
-                      />
-                    </v-col>
-                  </v-row>
-                </v-col>
-              </v-row>
-              <v-divider class="mx-4"></v-divider>
-              <v-row class="mt-2">
-                <v-col cols="4">
-                  <LargeTotal
-                    center="text-center"
-                    :largeCalc="averageAgeInProcess"
-                    largeTitle="Avg. Age (days)"
-                  />
-                </v-col>
-                <v-divider class="mx-4" inset vertical></v-divider>
-                <v-col>
-                  <v-row>
-                    <v-col cols="6">
-                      <MetricTitle title="Age Buckets" />
-                    </v-col>
-                    <v-col cols="6">
-                      <MetricTitle title="Average Queue Times" />
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col cols="6">
-                      <MetricLabelPercentage
-                        title="0-15 Days"
-                        :calculation="numZeroFifteen"
-                        :percentage="
-                          Math.floor((numZeroFifteen / numInProcess) * 100) +
-                            '%'
-                        "
-                      />
-                      <MetricLabelPercentage
-                        title="16-30 Days"
-                        :calculation="numSixteenThirty"
-                        :percentage="
-                          Math.floor((numSixteenThirty / numInProcess) * 100) +
-                            '%'
-                        "
-                      />
-                      <MetricLabelPercentage
-                        title="31+ Days"
-                        :calculation="numThirtyOne"
-                        :percentage="
-                          Math.floor((numThirtyOne / numInProcess) * 100) + '%'
-                        "
-                      />
-                    </v-col>
-                    <v-col cols="6">
-                      <MetricLabel
-                        title="In Shop"
-                        :calculation="averageAgeInShop"
-                        alternativeMessage="No requests"
-                      />
-                      <MetricLabel
-                        title="In Sublet Inspection"
-                        :calculation="averageAgeInSubletInspection"
-                        alternativeMessage="No requests"
-                      />
-                      <MetricLabel
-                        title="In Sublet"
-                        :calculation="averageAgeInSublet"
-                        alternativeMessage="No requests"
-                      />
-                      <MetricLabel
-                        title="In Detail"
-                        :calculation="averageAgeInDetail"
-                        alternativeMessage="No requests"
-                      />
-                    </v-col>
-                  </v-row>
-                </v-col>
-              </v-row>
-            </div>
-          </v-card-text>
-        </v-card>
-        <v-card class="mt-2">
-          <v-card-text>
-            <v-row align="center">
-              <v-col cols="12">
-                <MetricSectionHeader title="Completed" />
-              </v-col>
-              <v-col cols="4">
-                <LargeTotalArrow
-                  :percentage="percentage"
-                  :arrow="arrow"
-                  :center="color"
-                  :largeCalc="averageCycleTime"
-                  largeTitle="Avg. Cycle Time 30d"
-                />
-              </v-col>
-              <v-divider class="mx-4" inset vertical></v-divider>
-              <v-col cols="4">
-                <MetricLabel
-                  title="Num. Vehicles Complete"
-                  :calculation="lastThirty.length"
-                />
-                <MetricLabel
-                  title="Shop Cycle Time"
-                  :calculation="shopCycle30"
-                />
-                <MetricLabel
-                  title="Sublet Inspection Cycle Time"
-                  :calculation="subletInspectionCycle30"
-                />
-              </v-col>
-              <v-col cols="3">
-                <MetricLabel
-                  title="Sublet Cycle Time"
-                  :calculation="subletCycle30"
-                />
-                <MetricLabel
-                  title="Detail Cycle Time"
-                  :calculation="detailCycle30"
-                />
-              </v-col>
-            </v-row>
-            <v-divider class="mx-4"></v-divider>
-            <v-row>
-              <v-row align="center">
-                <v-col cols="4">
-                  <LargeTotal
-                    largeTitle="Avg. Cycle Time 90d"
-                    :largeCalc="averageCycleTime90"
-                  />
-                </v-col>
-                <v-divider class="mx-4" inset vertical></v-divider>
-                <v-col cols="4">
-                  <MetricLabel
-                    title="Num. Vehicles Complete"
-                    :calculation="lastNinety.length"
-                  />
-                  <MetricLabel
-                    title="Shop Cycle Time"
-                    :calculation="shopCycle90"
-                  />
-                  <MetricLabel
-                    title="Sublet Inspection Cycle Time"
-                    :calculation="subletInspectionCycle90"
-                  /> </v-col
-                ><v-col cols="3">
-                  <MetricLabel
-                    title="Sublet Cycle Time"
-                    :calculation="subletCycle90"
-                  />
-                  <MetricLabel
-                    title="Detail Cycle Time"
-                    :calculation="detailCycle90"
-                  />
-                </v-col>
-              </v-row>
-            </v-row>
-          </v-card-text>
-        </v-card>
+      <v-col sm="12" md="12" lg="5">
+        <!-- in process -->
+        <InProcess
+          :shop="shop"
+          :sublet="sublet"
+          :subletInspection="subletInspection"
+          :detail="detail"
+          :subletQueue="subletQueue"
+          :zeroFifteen="zeroFifteen"
+          :sixteenThirty="sixteenThirty"
+          :thirtyOne="thirtyOne"
+          :inProcess="inProcess"
+          :numInProcess="numInProcess"
+        />
+        <!-- complete -->
+        <Completed :lastThirty="lastThirty" :lastNinety="lastNinety" />
+        <!-- daily metrics -->
+        <DailyMetrics :lastThirty="lastThirty" :lastNinety="lastNinety" />
+        <!-- bmw vs non bmw breakdown -->
+        <BMWBreakdown :lastThirty="lastThirty" :lastNinety="lastNinety" />
       </v-col>
-      <v-col>
-        <v-card>
-          <v-card-title class="text">
-            <MetricSectionHeader title="Oldest 20 Vehicles" />
-          </v-card-title>
-          <v-data-table
-            :headers="headers"
-            :items="inProcessLimit"
-            :search="search"
-            :hide-default-footer="true"
-            :items-per-page="20"
-          >
-            <template v-slot:item.age="{ item }">
-              {{ elapsedTime(item) }}
-            </template>
-            <template v-slot:item.year="{ item }">
-              {{ item.year }}
-            </template>
-            <template v-slot:item.make="{ item }">
-              {{ item.make }}
-            </template>
-            <template v-slot:item.model="{ item }">
-              {{ item.model }}
-            </template>
-            <template v-slot:item.shop="{ item }">
-              <!-- Date -->
-              <div v-if="item.shop_complete_timestamp">
-                <Chip
-                  color="success"
-                  :calculation="dateFormat(item.shop_complete_timestamp)"
-                />
-              </div>
-              <!-- In process -->
-              <div v-else>
-                <Chip
-                  color="warning"
-                  :calculation="dateFormat(item.shop_complete_timestamp)"
-                />
-              </div>
-            </template>
-            <template v-slot:item.sublet="{ item }">
-              <!-- Sublet inspection is not done -->
-              <div v-if="!item.sublet_inspection_complete_timestamp">
-                <Chip
-                  color="warning"
-                  :calculation="
-                    subletStatusFormat(item.sublet_complete_timestamp, item)
-                  "
-                />
-              </div>
-              <!-- Sublet in process -->
-              <div
-                v-else-if="
-                  item.shop_complete_timestamp &&
-                    item.sublet === true &&
-                    item.sublet_inspection_complete_timestamp
-                "
-              >
-                <Chip
-                  color="warning"
-                  :calculation="
-                    subletStatusFormat(item.sublet_complete_timestamp, item)
-                  "
-                />
-              </div>
-              <div
-                v-else-if="
-                  !item.shop_complete_timestamp &&
-                    item.sublet_inspection_complete_timestamp
-                "
-              >
-                <Chip
-                  color="error"
-                  :calculation="
-                    subletStatusFormat(item.sublet_complete_timestamp, item)
-                  "
-                />
-              </div>
-              <div v-else>
-                <Chip
-                  color="success"
-                  :calculation="
-                    subletStatusFormat(item.sublet_complete_timestamp, item)
-                  "
-                />
-              </div>
-            </template>
-            <template v-slot:item.detail="{ item }">
-              <!-- In process -->
-              <div v-if="item.detail === true">
-                <Chip
-                  color="warning"
-                  :calculation="
-                    dateFormat(item.detail_complete_timestamp, item)
-                  "
-                />
-              </div>
-              <!-- Waiting on process -->
-              <div
-                v-if="
-                  dateFormat(item.detail_complete_timestamp, item) ===
-                    'Waiting on process'
-                "
-              >
-                <Chip
-                  color="error"
-                  :calculation="
-                    dateFormat(item.detail_complete_timestamp, item)
-                  "
-                />
-              </div>
-              <!-- Detail Complete -->
-              <div v-if="item.detail_complete_timestamp">
-                <Chip
-                  color="success"
-                  :calculation="
-                    dateFormat(item.detail_complete_timestamp, item)
-                  "
-                />
-              </div>
-            </template>
-          </v-data-table>
-        </v-card>
+      <v-col sm="12" lg="7">
+        <!-- oldest vehicle table -->
+        <OldestVehicles
+          :inProcessLimit="inProcessLimit"
+          :inProcess="inProcess"
+        />
       </v-col>
     </v-row>
   </v-container>
@@ -357,41 +37,39 @@
 import { db } from "../main";
 import firebase from "firebase";
 
-// components
-import MetricSectionHeader from "../components/MetricSectionHeader";
-import MetricLabel from "../components/MetricLabel";
-import MetricLabelPercentage from "../components/MetricLabelPercentage";
-import MetricTitle from "../components/MetricTitle";
-import LargeTotal from "../components/LargeTotal";
-import LargeTotalArrow from "../components/LargeTotalArrow";
-import Chip from "../components/Chip";
-import { async } from "q";
-import { setInterval } from "timers";
+// main components
+import InProcess from "../components/InProcess";
+import Completed from "../components/Completed";
+import OldestVehicles from "../components/OldestVehicles";
+import DailyMetrics from "../components/DailyMetrics";
+import BMWBreakdown from "../components/BMWBreakdown";
 export default {
   name: "Reports",
   components: {
-    MetricSectionHeader,
-    MetricLabelPercentage,
-    MetricTitle,
-    MetricLabel,
-    LargeTotal,
-    LargeTotalArrow,
-    Chip
+    InProcess,
+    Completed,
+    OldestVehicles,
+    DailyMetrics,
+    BMWBreakdown
   },
   data() {
     return {
-      headers: [
+      dataDumpHeaders: [
         {
-          text: "Age",
-          value: "age"
+          text: "ID",
+          value: "id"
         },
         {
-          text: "VIN",
+          text: "Stock #",
           value: "vin"
         },
         {
-          text: "Year",
-          value: "year"
+          text: "RO #",
+          value: "ro"
+        },
+        {
+          text: "Type",
+          value: "type"
         },
         {
           text: "Make",
@@ -402,18 +80,39 @@ export default {
           value: "model"
         },
         {
-          text: "Shop",
-          value: "shop"
+          text: "Initial Timestamp",
+          value: "initial_timestamp"
         },
         {
-          text: "Sublet",
-          value: "sublet"
+          text: "Shop Complete Timestamp",
+          value: "shop_complete_timestamp"
         },
         {
-          text: "Detail",
-          value: "detail"
+          text: "Sublet Inspection Complete Timestamp",
+          value: "sublet_inspection_complete_timestamp"
+        },
+        {
+          text: "Sublet Complete Timestamp",
+          value: "sublet_complete_timestamp"
+        },
+        {
+          text: "Detail Complete Timestamp",
+          value: "detail_complete_timestamp"
+        },
+        {
+          text: "Sent to Detail",
+          value: "shopToDetail"
+        },
+        {
+          text: "Sent to Detail Timestamp",
+          value: "toDetailTimestamp"
+        },
+        {
+          text: "Shop Delete Timestamp",
+          value: "shop_delete_timestamp"
         }
       ],
+
       shop: [],
       subletInspection: [],
       sublet: [],
@@ -428,10 +127,7 @@ export default {
       inProcess: null,
       zeroFifteen: null,
       sixteenThirty: null,
-      thirtyOne: null,
-      arrow: null,
-      search: "",
-      currentTime: Date.now()
+      thirtyOne: null
     };
   },
   computed: {
@@ -464,184 +160,7 @@ export default {
       });
       return nonbmw;
     },
-    numShop() {
-      return this.shop.length;
-    },
-    numSubletInspection() {
-      return this.subletInspection.length;
-    },
-    numSublet() {
-      return this.sublet.length;
-    },
-    numSubletQueue() {
-      return this.subletQueue.length;
-    },
-    numDetail() {
-      return this.detail.length;
-    },
-    numZeroFifteen() {
-      return this.zeroFifteen.length;
-    },
-    numSixteenThirty() {
-      return this.sixteenThirty.length;
-    },
-    numThirtyOne() {
-      return this.thirtyOne.length;
-    },
-    averageAgeInProcess() {
-      let age = 0;
-      this.inProcess.forEach(item => {
-        age = age + item.initial_timestamp;
-      });
-      let difference = age / this.inProcess.length;
-      let elapsed = Date.now() - difference;
-      let minutes = elapsed / 60000;
-      let days = minutes / 1440;
-      return Math.floor(days);
-    },
-    averageAgeInShop() {
-      let age = 0;
-      this.shop.forEach(item => {
-        age = age + item.initial_timestamp;
-      });
-      let difference = age / this.shop.length;
-      let elapsed = Date.now() - difference;
-      let minutes = elapsed / 60000;
-      let days = minutes / 1440;
-      return `${Math.floor(days)} days`;
-    },
-    averageAgeInSubletInspection() {
-      let age = 0;
-      this.subletInspection.forEach(item => {
-        age = age + item.initial_timestamp;
-      });
-      let difference = age / this.subletInspection.length;
-      let elapsed = Date.now() - difference;
-      let minutes = elapsed / 60000;
-      let days = minutes / 1440;
-      return `${Math.floor(days)} days`;
-    },
-    averageAgeInSublet() {
-      let age = 0;
-      this.subletQueue.forEach(item => {
-        if (
-          item.shop_complete_timestamp >
-          item.sublet_inspection_complete_timestamp
-        ) {
-          age = age + item.shop_complete_timestamp;
-        } else if (
-          item.shop_complete_timestamp <
-          item.sublet_inspection_complete_timestamp
-        ) {
-          age = age + item.sublet_inspection_complete_timestamp;
-        }
-      });
-      let difference = age / this.subletQueue.length;
-      let elapsed = Date.now() - difference;
-      let minutes = elapsed / 60000;
-      let days = minutes / 1440;
-      return `${Math.floor(days)} days`;
-    },
-    averageAgeInDetail() {
-      let age = 0;
-      this.detail.forEach(item => {
-        // send to detail
-        if (item.toDetailTimestamp) {
-          age = age + item.toDetailTimestamp;
-        } else if (item.sublet_complete_timestamp) {
-          age = age + item.sublet_complete_timestamp;
-        } else if (
-          item.sublet_inspection_complete_timestamp &&
-          item.shop_complete_timestamp
-        ) {
-          // sublet took longer to complete work
-          if (
-            item.sublet_inspection_complete_timestamp >
-            item.shop_complete_timestamp
-          ) {
-            age = age + item.sublet_inspection_complete_timestamp;
-            // shop took longer to complete work
-          } else {
-            age = age + item.shop_complete_timestamp;
-          }
-        }
-      });
-      let difference = age / this.detail.length;
-      let elapsed = Date.now() - difference;
-      let minutes = elapsed / 60000;
-      let days = minutes / 1440;
-      return `${Math.floor(days)} days`;
-    },
-    averageCycleTime() {
-      let times = [];
-      let totalTime = 0;
-      this.lastThirty.forEach(item => {
-        if (!item.sublet_complete_timestamp) {
-          let completeTimes = [
-            item.shop_complete_timestamp,
-            item.sublet_inspection_complete_timestamp,
-            item.detail_complete_timestamp
-          ];
-          let initial = item.initial_timestamp;
-          let max = Math.max(...completeTimes);
-          let difference = max - initial;
-          times.push(difference);
-        } else {
-          let completeTimes = [
-            item.shop_complete_timestamp,
-            item.sublet_inspection_complete_timestamp,
-            item.sublet_complete_timestamp,
-            item.detail_complete_timestamp
-          ];
-          let initial = item.initial_timestamp;
-          let max = Math.max(...completeTimes);
-          let difference = max - initial;
-          times.push(difference);
-        }
-      });
-      times.forEach(time => {
-        totalTime = totalTime + time;
-      });
-      let avgMili = totalTime / times.length;
-      let minutes = avgMili / 60000;
-      let days = minutes / 1440;
-      return Math.floor(days);
-    },
-    averageCycleTime90() {
-      let times = [];
-      let totalTime = 0;
-      this.lastNinety.forEach(item => {
-        if (!item.sublet_complete_timestamp) {
-          let completeTimes = [
-            item.shop_complete_timestamp,
-            item.sublet_inspection_complete_timestamp,
-            item.detail_complete_timestamp
-          ];
-          let initial = item.initial_timestamp;
-          let max = Math.max(...completeTimes);
-          let difference = max - initial;
-          times.push(difference);
-        } else {
-          let completeTimes = [
-            item.shop_complete_timestamp,
-            item.sublet_inspection_complete_timestamp,
-            item.sublet_complete_timestamp,
-            item.detail_complete_timestamp
-          ];
-          let initial = item.initial_timestamp;
-          let max = Math.max(...completeTimes);
-          let difference = max - initial;
-          times.push(difference);
-        }
-      });
-      times.forEach(time => {
-        totalTime = totalTime + time;
-      });
-      let avgMili = totalTime / times.length;
-      let minutes = avgMili / 60000;
-      let days = minutes / 1440;
-      return Math.floor(days);
-    },
+    // calculates lastThirty
     last30Days() {
       let filtered = this.cycleTime.filter(item => {
         if (!item.sublet_complete_timestamp) {
@@ -673,6 +192,7 @@ export default {
       });
       this.lastThirty = filtered;
     },
+    // calculates lastNinety
     last90Days() {
       let filtered = this.cycleTime.filter(item => {
         if (!item.sublet_complete_timestamp) {
@@ -704,216 +224,9 @@ export default {
         }
       });
       this.lastNinety = filtered;
-    },
-    shopCycle30() {
-      let age = 0;
-      this.lastThirty.forEach(item => {
-        let d = item.shop_complete_timestamp - item.initial_timestamp;
-        age = age + d;
-      });
-      let avgAge = age / this.lastThirty.length;
-      let minutes = avgAge / 60000;
-      let days = minutes / 1440;
-
-      return `${Math.floor(days)} days`;
-    },
-    subletInspectionCycle30() {
-      let age = 0;
-      this.lastThirty.forEach(item => {
-        let d =
-          item.sublet_inspection_complete_timestamp - item.initial_timestamp;
-        age = age + d;
-      });
-      let avgAge = age / this.lastThirty.length;
-      let minutes = avgAge / 60000;
-      let days = minutes / 1440;
-
-      return `${Math.floor(days)} days`;
-    },
-    subletCycle30() {
-      let age = 0;
-      let filtered = this.lastThirty.filter(item => {
-        if (item.sublet_complete_timestamp) {
-          return item;
-        }
-      });
-      if (filtered.length > 0) {
-        filtered.forEach(item => {
-          let times = [
-            item.shop_complete_timestamp,
-            item.sublet_inspection_complete_timestamp
-          ];
-          let max = Math.max(...times);
-
-          let d = item.sublet_complete_timestamp - max;
-          age = age + d;
-        });
-        let avgAge = age / filtered.length;
-        let minutes = avgAge / 60000;
-        let days = minutes / 1440;
-        return `${Math.floor(days)} days`;
-      } else {
-        return "No request have gone through sublet";
-      }
-    },
-    detailCycle30() {
-      let age = 0;
-      this.lastThirty.forEach(item => {
-        let times = [];
-        if (item.sublet_complete_timestamp) {
-          times = [
-            item.shop_complete_timestamp,
-            item.sublet_complete_timestamp
-          ];
-        } else {
-          times = [
-            item.shop_complete_timestamp,
-            item.sublet_inspection_complete_timestamp
-          ];
-        }
-
-        let max = Math.max(...times);
-        let d = item.detail_complete_timestamp - max;
-        age = age + d;
-      });
-      let avgAge = age / this.lastThirty.length;
-      let minutes = avgAge / 60000;
-      let days = minutes / 1440;
-      return `${Math.floor(days)} days`;
-    },
-    shopCycle90() {
-      let age = 0;
-      this.lastNinety.forEach(item => {
-        let d = item.shop_complete_timestamp - item.initial_timestamp;
-        age = age + d;
-      });
-      let avgAge = age / this.lastNinety.length;
-      let minutes = avgAge / 60000;
-      let days = minutes / 1440;
-
-      return `${Math.floor(days)} days`;
-    },
-    subletInspectionCycle90() {
-      let age = 0;
-      this.lastNinety.forEach(item => {
-        let d =
-          item.sublet_inspection_complete_timestamp - item.initial_timestamp;
-        age = age + d;
-      });
-      let avgAge = age / this.lastNinety.length;
-      let minutes = avgAge / 60000;
-      let days = minutes / 1440;
-
-      return `${Math.floor(days)} days`;
-    },
-    subletCycle90() {
-      let age = 0;
-      let filtered = this.lastNinety.filter(item => {
-        if (item.sublet_complete_timestamp) {
-          return item;
-        }
-      });
-      if (filtered.length > 0) {
-        filtered.forEach(item => {
-          let times = [
-            item.shop_complete_timestamp,
-            item.sublet_inspection_complete_timestamp
-          ];
-          let max = Math.max(...times);
-
-          let d = item.sublet_complete_timestamp - max;
-          age = age + d;
-        });
-        let avgAge = age / filtered.length;
-        let minutes = avgAge / 60000;
-        let days = minutes / 1440;
-        return `${Math.floor(days)} days`;
-      } else {
-        return "No request have gone through sublet";
-      }
-    },
-    detailCycle90() {
-      let age = 0;
-      this.lastNinety.forEach(item => {
-        let times = [];
-        if (item.sublet_complete_timestamp) {
-          times = [
-            item.shop_complete_timestamp,
-            item.sublet_complete_timestamp
-          ];
-        } else {
-          times = [
-            item.shop_complete_timestamp,
-            item.sublet_inspection_complete_timestamp
-          ];
-        }
-
-        let max = Math.max(...times);
-        let d = item.detail_complete_timestamp - max;
-        age = age + d;
-      });
-      let avgAge = age / this.lastNinety.length;
-      let minutes = avgAge / 60000;
-      let days = minutes / 1440;
-      return `${Math.floor(days)} days`;
-    },
-    color() {
-      if (this.averageCycleTime > this.averageCycleTime90) {
-        this.arrow = "mdi-arrow-up-bold";
-        return "bad";
-      } else if (this.averageCycleTime90 === this.averageCycleTime) {
-        return;
-      } else {
-        this.arrow = "mdi-arrow-down-bold";
-        return "good";
-      }
-    },
-    percentage() {
-      let decimal = this.averageCycleTime / this.averageCycleTime90;
-      let percentage = (1 - decimal) * 100;
-      return `${Math.floor(percentage)}%`;
     }
   },
   methods: {
-    subletStatusFormat(mili, i) {
-      if (i !== undefined) {
-        if (!i.sublet_inspection_complete_timestamp) {
-          return "Inspection not performed";
-        } else if (
-          i.sublet_inspection_complete_timestamp &&
-          i.shop_complete_timestamp &&
-          i.sublet === true
-        ) {
-          return "In process";
-        } else if (
-          i.sublet_inspection_complete_timestamp &&
-          !i.shop_complete_timestamp
-        ) {
-          return "Waiting on process";
-        } else if (!mili) {
-          return "No sublet";
-        } else {
-          return new Date(mili).toLocaleDateString();
-        }
-      }
-    },
-    dateFormat(mili, i) {
-      if (i !== undefined) {
-        if (i.detail === true) {
-          return "In process";
-        } else if (i.detail_complete_timestamp) {
-          return "Detail complete";
-        } else {
-          return "Waiting on process";
-        }
-      } else {
-        if (!mili) {
-          return "In process";
-        } else {
-          return new Date(mili).toLocaleDateString();
-        }
-      }
-    },
     filterCycle() {
       let result = this.cycle.filter(c => {
         if (
@@ -992,34 +305,6 @@ export default {
         }
       });
       this.thirtyOne = thirtyOnePlus;
-    },
-    elapsedTime(i) {
-      let minutes = Math.floor(
-        (this.currentTime - i.initial_timestamp) / 60000
-      );
-      if (minutes >= 1440) {
-        let day = Math.floor(minutes / 1440);
-        if (day === 1) {
-          return `${day} day`;
-        } else {
-          return `${day} days`;
-        }
-      } else if (minutes >= 60) {
-        let hour = Math.floor(minutes / 60);
-        if (hour === 1) {
-          return `${hour} hour`;
-        } else {
-          return `${hour} hours`;
-        }
-      } else if (minutes < 60 && minutes !== 0) {
-        if (minutes === 1) {
-          return `${Math.floor(minutes)} minute`;
-        } else {
-          return `${Math.floor(minutes)} minutes`;
-        }
-      } else if (minutes === 0) {
-        return `A few seconds ago`;
-      }
     }
   },
   firestore() {

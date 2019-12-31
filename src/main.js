@@ -11,8 +11,13 @@ import firebase from "firebase";
 import { firestorePlugin } from "vuefire";
 import "firebase/firestore";
 
+// Charts
+import Chartkick from "vue-chartkick";
+import Chart from "chart.js";
+
 // * Plugins
 Vue.use(firestorePlugin);
+Vue.use(Chartkick.use(Chart));
 
 // * Initialize Firebase
 // * Setting database config
@@ -24,6 +29,16 @@ const config = {
   storageBucket: "keytracker-e176b.appspot.com",
   messagingSenderId: "1084196062284",
   appId: "1:1084196062284:web:5d81b521c622eb31"
+};
+
+const test = {
+  apiKey: "AIzaSyBzBeNpGg4hANEkpxw25Z-8FF_r3QJr2gg",
+  authDomain: "testtest-6350a.firebaseapp.com",
+  databaseURL: "https://testtest-6350a.firebaseio.com",
+  projectId: "testtest-6350a",
+  storageBucket: "testtest-6350a.appspot.com",
+  messagingSenderId: "560921073477",
+  appId: "1:560921073477:web:a2f6f65988188c3c66902c"
 };
 
 // * Initalizing Firebase

@@ -109,7 +109,8 @@ export default {
       shop: [],
       subletInspection: [],
       sublet: [],
-      detail: []
+      detail: [],
+      currentUser: firebase.auth().currentUser.displayName
     };
   },
   methods: {
@@ -128,7 +129,7 @@ export default {
         this.color !== null
       ) {
         if (filtered.length > 0) {
-          console.log("already in the system you idiot");
+          console.log("already in the system");
         } else {
           db.collection("tpo").add({
             // * Form Values
@@ -145,7 +146,8 @@ export default {
             sublet: "In process",
             detail: "In process",
             // * Extras
-            repairs: []
+            repairs: [],
+            createdBy: this.currentUser
           });
           // Resetting the values to null
           this.vin = null;
