@@ -132,7 +132,20 @@ export default {
         .update({
           detail: false,
           detail_complete_timestamp: Date.now(),
-          detail_complete_associate: firebase.auth().currentUser.displayName
+          detail_complete_associate: firebase.auth().currentUser.displayName,
+          detail_complete_associate_photo: firebase.auth().currentUser.photoURL
+        })
+        .then(() => {
+          let date = new Date(
+            item.detail_complete_timestamp
+          ).toLocaleDateString();
+          db.collection("mail").add({
+            to: "barry.laird@principleauto.com",
+            message: {
+              subject: `Detail Completed - ${item.vin}`,
+              text: `The detail for ${item.vin} was completed on ${new Date()}.`
+            }
+          });
         });
     },
     sendback(i) {
@@ -206,11 +219,11 @@ export default {
         minutes = Math.floor((this.currentTime - i.toDetailTimestamp) / 60000);
         return this.timeLogic(minutes);
       } else if (i.sublet_complete_timestamp) {
-         minutes = Math.floor(
-            (this.currentTime - i.sublet_complete_timestamp) / 60000
-          );
-          return this.timeLogic(minutes);
-      }else if (
+        minutes = Math.floor(
+          (this.currentTime - i.sublet_complete_timestamp) / 60000
+        );
+        return this.timeLogic(minutes);
+      } else if (
         i.sublet_inspection_complete_timestamp &&
         i.shop_complete_timestamp
       ) {

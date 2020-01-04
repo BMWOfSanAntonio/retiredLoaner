@@ -121,6 +121,28 @@
             />
           </v-col>
         </v-row>
+        <v-btn
+          @click="slider = !slider"
+          v-if="slider === false"
+          color="info"
+          text
+          top
+          right
+          dark
+        >
+          View In Process
+        </v-btn>
+        <v-btn
+          @click="slider = !slider"
+          v-if="slider === true"
+          color="info"
+          fab
+          top
+          text
+          right
+          dark
+          ><v-icon>mdi-close</v-icon></v-btn
+        >
         <v-row>
           <transition name="slide-fade">
             <v-col v-if="slider" cols="12">
@@ -155,19 +177,6 @@
               </v-data-table>
             </v-col>
           </transition>
-          <v-col class="text-center">
-            <v-btn
-              v-if="slider === false"
-              @click="slider = !slider"
-              text
-              small
-              color="info"
-              >See All in Process</v-btn
-            >
-            <v-btn v-else @click="slider = !slider" text small color="info"
-              >Close</v-btn
-            >
-          </v-col>
         </v-row>
       </v-container>
     </v-card>

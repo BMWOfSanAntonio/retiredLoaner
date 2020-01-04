@@ -359,7 +359,8 @@ export default {
           .update({
             sublet_inspection: false,
             sublet_inspection_complete_timestamp: Date.now(),
-            sublet_instpection_associate: this.user.displayName,
+            sublet_inspection_associate: this.user.displayName,
+            sublet_inspection_associate_photo: this.user.photoURL,
             repairs: item.repairs,
             comments: item.comments,
             sublet: true
@@ -385,6 +386,7 @@ export default {
               sublet_inspection: false,
               sublet_inspection_complete_timestamp: Date.now(),
               sublet_inspection_associate: this.user.displayName,
+              sublet_inspection_associate_photo: this.user.photoURL,
               sublet: false,
               no_sublet: true,
               comments: item.comments,
@@ -398,6 +400,7 @@ export default {
               sublet_inspection: false,
               sublet_inspection_complete_timestamp: Date.now(),
               sublet_inspection_associate: this.user.displayName,
+              sublet_inspection_associate_photo: this.user.photoURL,
               sublet: false,
               no_sublet: true,
               comments: item.comments,
@@ -412,6 +415,7 @@ export default {
               sublet_inspection: false,
               sublet_inspection_complete_timestamp: Date.now(),
               sublet_inspection_associate: this.user.displayName,
+              sublet_inspection_associate_photo: this.user.photoURL,
               sublet: false,
               no_sublet: true,
               repairs: null,
@@ -424,6 +428,7 @@ export default {
               sublet_inspection: false,
               sublet_inspection_complete_timestamp: Date.now(),
               sublet_inspection_associate: this.user.displayName,
+              sublet_inspection_associate_photo: this.user.photoURL,
               sublet: false,
               no_sublet: true,
               repairs: null
@@ -483,7 +488,8 @@ export default {
           model: item.model,
           color: item.color,
           sublet_inspection_edit_timestamp: Date.now(),
-          sublet_inspection_edit_associate: this.user.displayName
+          sublet_inspection_edit_associate: this.user.displayName,
+          sublet_inspection_edit_associate_photo: this.user.photoURL
         });
       this.closeEdit();
     },

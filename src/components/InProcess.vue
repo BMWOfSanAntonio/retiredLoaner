@@ -130,7 +130,7 @@
             </v-row>
           </v-col>
         </v-row>
-        <transition name="slide-fade">
+        <!-- //?<transition name="slide-fade">
           <v-row v-if="slider">
             <div class="text-center">
               <div class="title mb-3">Process Break Down</div>
@@ -162,12 +162,12 @@
           </v-row>
         </transition>
 
-        <v-row justify="center">
+        //? <v-row justify="center">
           <v-btn color="primary" v-if="slider === false" @click="open()"
             >View Charts and Graphs</v-btn
           >
           <v-btn v-else-if="slider === true" @click="close()">Close</v-btn>
-        </v-row>
+        </v-row> -->
       </div>
     </v-card-text>
   </v-card>

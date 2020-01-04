@@ -321,7 +321,8 @@ export default {
             detail: false,
             sublet: false,
             shop_delete_timestamp: Date.now(),
-            shop_delete_user: firebase.auth().currentUser.displayName
+            shop_delete_user: firebase.auth().currentUser.displayName,
+            shop_delete_user_photo: firebase.auth().currentUser.photoURL
           });
       }
     },
@@ -339,7 +340,8 @@ export default {
             detail: true,
             shop: false,
             shop_complete_timestamp: Date.now(),
-            shop_associate: this.user.displayName
+            shop_associate: this.user.displayName,
+            shop_associate_photo: this.user.photoURL
           });
       } else {
         db.collection("tpo")
@@ -347,7 +349,8 @@ export default {
           .update({
             shop: false,
             shop_complete_timestamp: Date.now(),
-            shop_associate: this.user.displayName
+            shop_associate: this.user.displayName,
+            shop_associate_photo: this.user.photoURL
           });
       }
     },

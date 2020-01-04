@@ -18,9 +18,9 @@
         <!-- complete -->
         <Completed :lastThirty="lastThirty" :lastNinety="lastNinety" />
         <!-- daily metrics -->
-        <DailyMetrics :lastThirty="lastThirty" :lastNinety="lastNinety" />
+        <!-- //?<DailyMetrics :lastThirty="lastThirty" :lastNinety="lastNinety" /> -->
         <!-- bmw vs non bmw breakdown -->
-        <BMWBreakdown :lastThirty="lastThirty" :lastNinety="lastNinety" />
+        <!-- //?<BMWBreakdown :lastThirty="lastThirty" :lastNinety="lastNinety" /> -->
       </v-col>
       <v-col sm="12" lg="7">
         <!-- oldest vehicle table -->

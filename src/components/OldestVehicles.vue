@@ -115,14 +115,14 @@
       </template>
     </v-data-table>
     <!-- MAKE SHIFT REPORT -->
-    <v-data-table :headers="dataDumpHeaders" :items="inProcess">
+    <!-- //?<v-data-table :headers="dataDumpHeaders" :items="inProcess">
       <template v-slot:item.shopToDetail="{ item }">
         <div v-if="item.shopToDetail && item.shopToDetail === true">
           Yes
         </div>
         <div v-if="!item.shopToDetail">No</div>
       </template>
-    </v-data-table>
+    </v-data-table> -->
   </v-card>
 </template>
 

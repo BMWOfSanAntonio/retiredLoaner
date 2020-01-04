@@ -200,7 +200,8 @@ export default {
             repairs: [],
             sold: this.sold,
             ro: this.ro,
-            createdBy: firebase.auth().currentUser.displayName
+            createdBy: firebase.auth().currentUser.displayName,
+            createdByPhoto: firebase.auth().currentUser.photoURL
           });
           // Resetting the values to null
           this.vin = null;
