@@ -115,7 +115,12 @@ exports.financeUsage = functions.pubsub.schedule("@daily").onRun(context => {
         .firestore()
         .collection("mail")
         .add({
-          to: "bbarton@principleauto.com",
+          to: [
+            "bbarton@principleauto.com",
+            "austin.hughes@principleauto.com",
+            "brad.lilley@principleauto.com",
+            "carolina.sanchez@principleauto.com"
+          ],
           cc: "james.shiflett@principleauto.com",
           message: {
             subject: `BMW Sold Units: Finance Daily Usage Report - ${new Date().toLocaleDateString()}`,

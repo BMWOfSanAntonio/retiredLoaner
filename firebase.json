@@ -1,11 +1,7 @@
 {
   "hosting": {
     "public": "dist",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "site": "tpotracker"
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "site": "bmwloaner"
   }
 }
